@@ -318,7 +318,9 @@ mark { background: color-mix(in srgb, var(--why-line) 45%, transparent); color: 
   #menuBtn { display: inline-block; }
   .shell { grid-template-columns: minmax(0, 1fr); }
   nav.side {
-    position: fixed; z-index: 30; left: 0; top: 53px; bottom: 0; height: auto; width: min(320px, 88vw);
+    position: fixed; z-index: 30; left: 0; top: 53px; bottom: 0; width: min(320px, 88vw);
+    /* As a grid child, align-self: start would shrink-wrap the fixed panel to its content, so it could never scroll. */
+    align-self: stretch; height: calc(100vh - 53px); height: calc(100dvh - 53px); overscroll-behavior: contain;
     transform: translateX(-102%); transition: transform 0.2s; box-shadow: 4px 0 24px rgb(0 0 0 / 0.25);
   }
   body.nav-open nav.side { transform: none; }
@@ -7424,7 +7426,7 @@ func _show_credits() -> void:
 
 <script>
 'use strict';
-const APP_BUILD = '1.1 (2026.11.06)';
+const APP_BUILD = '1.2 (2026.11.06)';
 const REPO = 'sonusario/build_your_own_idle_game_in_godot';
 const DOCS = 'https://docs.godotengine.org/en/stable/';
 const $ = id => document.getElementById(id);
