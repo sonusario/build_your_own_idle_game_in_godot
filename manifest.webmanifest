@@ -1,0 +1,15 @@
+{
+  "name": "Build Your Own Idle Game in Godot",
+  "short_name": "Idle Godot",
+  "description": "A click-by-click tutorial from installing Godot to publishing and updating a complete idle game.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101512",
+  "theme_color": "#14201a",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
