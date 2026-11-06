@@ -152,7 +152,13 @@ nav.side {
   padding: 4px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted);
 }
 .side .part > button span.count { margin-left: auto; font-weight: 500; letter-spacing: 0; }
+.side .part > button .chev { flex: none; width: 10px; height: 10px; align-self: center; transition: transform .15s; }
+.side .part.closed > button .chev { transform: rotate(-90deg); }
+.side .part > button:hover { color: var(--ink); }
 .side .part.closed ol { display: none; }
+.side .tocbar { display: flex; justify-content: flex-end; gap: 10px; margin: -4px 14px 2px; font-size: 12px; }
+.side .tocbar button { border: 0; background: none; color: var(--muted); text-decoration: underline; cursor: pointer; padding: 0; font: inherit; }
+.side .tocbar button:hover { color: var(--ink); }
 .side ol { list-style: none; margin: 0; padding: 0; }
 .side li a {
   display: flex; gap: 8px; align-items: flex-start;
@@ -180,6 +186,7 @@ article h3 { font-size: 20px; margin: 30px 0 8px; }
 article h4 { font-size: 16px; margin: 20px 0 6px; }
 article p, article li { max-width: 72ch; }
 article img { max-width: 100%; }
+main :not(pre) > code { overflow-wrap: anywhere; }
 article table { border-collapse: collapse; margin: 12px 0; font-size: 14px; display: block; overflow-x: auto; }
 article th, article td { border: 1px solid var(--line); padding: 5px 9px; text-align: left; vertical-align: top; }
 article th { background: var(--panel-2); }
@@ -345,6 +352,7 @@ mark { background: color-mix(in srgb, var(--why-line) 45%, transparent); color: 
 <div class="shell">
 <nav class="side" id="side" aria-label="Chapters">
   <input class="search" id="search" type="search" placeholder="Search the tutorial…" aria-label="Search the tutorial">
+  <div class="tocbar"><button type="button" id="expandAll">Expand all</button><button type="button" id="collapseAll">Collapse all</button></div>
   <div id="toc"></div>
   <div class="foot"><button id="aboutBtn">About</button><button id="resetBtn">Reset progress</button></div>
 </nav>
@@ -365,6 +373,7 @@ mark { background: color-mix(in srgb, var(--why-line) 45%, transparent); color: 
   <div><h4>Part 4</h4><p>Everything that makes it a proper idle game: upgrades, achievements, prestige, bonuses, sound, settings, polish.</p></div>
   <div><h4>Parts 5–6</h4><p>Make your own simple art and sound, then publish to the platforms and stores you pick.</p></div>
   <div><h4>Parts 7–9</h4><p>Ship updates safely, make advanced assets (Blender, music, sound design), and tour the rest of Godot's features.</p></div>
+  <div><h4>Part 10</h4><p>Build an arcade of mini games (a platformer, a shooter, pinball, a rhythm game, 3D, split screen) to explore the corners of Godot an idle game never reaches.</p></div>
 </div>
 
 <h3>The three kinds of help you'll see</h3>
@@ -379,7 +388,7 @@ mark { background: color-mix(in srgb, var(--why-line) 45%, transparent); color: 
   <li>Every numbered box is one thing to do. When you've done it, tick the box on its right. Try it on this one.</li>
   <li>Chapters with a purple dot in the menu only apply to some paths. Next, pick yours.</li>
 </ol>
-<aside class="tip"><p>The tutorial is written against <b>Godot 4.5 and newer</b> (the 4.x series). Godot moves quickly; if a button isn't exactly where a step says, open the Command Palette with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> (<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> on a Mac) and type what you're looking for. <q-a d="tutorials/editor/command_palette">What is the Command Palette?</q-a></p></aside>
+<aside class="tip"><p>The tutorial is written against <b>Godot 4.5 and newer</b> (the 4.x series). Godot moves quickly; if a button isn't exactly where a step says, open the Command Palette with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> (<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> on a Mac) and type what you're looking for. <q-a c="EditorCommandPalette">What is the Command Palette?</q-a></p></aside>
 </article>
 
 <article class="ch" id="your-path" data-part="0" data-title="Choose your path">
@@ -594,10 +603,10 @@ git push -u origin main
   <li>In the <b>Scene</b> dock, under <b>Create Root Node</b>, click <b>User Interface</b>. A node called <code>Control</code> appears. Double-click it and rename it to <code>Main</code>.</li>
   <li>Press <kbd>Ctrl</kbd>+<kbd>S</kbd> (<kbd>Cmd</kbd>+<kbd>S</kbd>), open the <code>scenes</code> folder, check the name is <code>main.tscn</code> and click <b>Save</b>.</li>
   <li>With <code>Main</code> selected, click the <b>+</b> button at the top of the Scene dock (or press <kbd>Ctrl</kbd>+<kbd>A</kbd>). In the <b>Create New Node</b> window, type <code>ColorRect</code>, select it, click <b>Create</b>. Rename it <code>Background</code>.
-    <div class="qs"><q-a d="getting_started/step_by_step/nodes_and_scenes#creating-your-first-node">How do I add a node?</q-a></div></li>
+    <div class="qs"><q-a d="getting_started/step_by_step/nodes_and_scenes#creating-your-first-scene">How do I add a node?</q-a></div></li>
   <li>With <code>Background</code> selected, look at the toolbar above the viewport for the <b>anchor preset</b> button (a small square with a green dot; in some versions it's a <b>Layout</b> menu). Choose <b>Full Rect</b>. In the Inspector, click the <b>Color</b> swatch and pick a soft green, such as <code>#cfe6c8</code>.</li>
   <li>Select <code>Main</code> again and add a <b>MarginContainer</b>. Rename it <code>Margin</code> and set it to <b>Full Rect</b> too. In the Inspector, open <b>Theme Overrides → Constants</b> and tick and set <b>Margin Left</b>, <b>Top</b>, <b>Right</b> and <b>Bottom</b> to <code>24</code>.
-    <div class="qs"><q-a d="tutorials/ui/gui_skinning#theme-overrides">What are theme overrides?</q-a></div></li>
+    <div class="qs"><q-a d="tutorials/ui/gui_skinning#customizing-a-control">What are theme overrides?</q-a></div></li>
   <li>Select <code>Margin</code> and add a <b>BoxContainer</b> (just "BoxContainer", not HBox or VBox). Rename it <code>Layout</code>. Under <b>Theme Overrides → Constants</b> set <b>Separation</b> to <code>24</code>. Right-click <code>Layout</code> and choose <b>Access as Unique Name</b>; a <b>%</b> appears next to it.
     <div class="qs"><q-a d="tutorials/scripting/scene_unique_nodes">What is a scene unique name?</q-a></div>
     <aside class="why"><p>A plain BoxContainer can switch between side-by-side and stacked with one property, <code>vertical</code>. We'll flip it from code depending on the window shape, so landscape screens get the farm next to the shop and portrait phones get it on top.</p></aside></li>
@@ -671,7 +680,7 @@ func _fit_layout() -> void:
 <h2>Move the numbers into a Game singleton</h2>
 <div class="meta"><span class="chip">20 minutes</span></div>
 <p>Right now the sprout count lives inside the main screen. That won't last: the shop, the save system, achievements and settings all need to read and change it. We'll move all game state into one script, <b>Game</b>, that every other script can reach.</p>
-<div class="qs"><q-a d="tutorials/scripting/singletons_autoload">What is an autoload (singleton)?</q-a> <q-a d="tutorials/best_practices/autoloads_versus_internal_nodes">When should I use an autoload?</q-a></div>
+<div class="qs"><q-a d="tutorials/scripting/singletons_autoload">What is an autoload (singleton)?</q-a> <q-a d="tutorials/best_practices/autoloads_versus_regular_nodes">When should I use an autoload?</q-a></div>
 <aside class="why"><p>This is the most important structural decision in the game. <b>Game</b> owns the numbers and the rules; screens only <em>display</em> them and <em>ask</em> Game to change them. When Game changes something it emits a signal, and whichever screens care update themselves. The benefits pile up later: saving is "write Game's variables to a file", offline progress is "call Game's earn function", and you can redesign every screen without touching the economy.</p>
 <p>We also store sprouts as a <code>float</code>, not an <code>int</code>. Integers in Godot top out around 9.2 quintillion (9.2×10<sup>18</sup>), which idle games blow past; floats go up to about 1.8×10<sup>308</sup>. <q-a d="tutorials/scripting/gdscript/gdscript_basics#built-in-types">What number types does GDScript have?</q-a></p></aside>
 <ol class="steps">
@@ -870,7 +879,7 @@ extends Resource
 <script type="text/x-code" data-lang="gd" data-file="res://scripts/game.gd">
 const DB: GameDatabase = preload("res://data/database.tres")
 </script>
-    <div class="qs"><q-a d="tutorials/scripting/gdscript/gdscript_basics#preload">What is the difference between preload and load?</q-a></div></li>
+    <div class="qs"><q-a d="tutorials/scripting/gdscript/gdscript_basics#classes-as-resources">What is the difference between preload and load?</q-a></div></li>
 </ol>
 </article>
 
@@ -1125,7 +1134,7 @@ func _ready() -> void:
 	tween.tween_property(self, "modulate:a", 0.0, 0.6).set_delay(0.3)
 	tween.chain().tween_callback(queue_free)
 </script>
-    <aside class="why"><p>Each floating number cleans itself up with <code>queue_free</code> when its animation ends. Click a thousand times and you won't leak a thousand labels. <q-a d="tutorials/scripting/nodes_and_scene_instances#removing-nodes">What does queue_free do?</q-a></p></aside></li>
+    <aside class="why"><p>Each floating number cleans itself up with <code>queue_free</code> when its animation ends. Click a thousand times and you won't leak a thousand labels. <q-a c="Node" h="class-node-method-queue-free">What does queue_free do?</q-a></p></aside></li>
   <li>In <code>main.gd</code>, preload it at the top next to <code>GENERATOR_ROW</code>:
 <script type="text/x-code" data-lang="gd" data-file="res://scenes/main.gd">
 const FLOAT_TEXT := preload("res://scenes/float_text.tscn")
@@ -1261,7 +1270,7 @@ func load_game() -> void:
 	else:
 		push_warning("The save file is damaged; starting fresh.")
 </script>
-    <div class="qs"><q-a d="tutorials/scripting/gdscript/gdscript_basics#variant">What is a Variant?</q-a> <q-a d="tutorials/scripting/debug/overview_of_debugging_tools">Where do push_error and push_warning show up?</q-a></div></li>
+    <div class="qs"><q-a c="Variant">What is a Variant?</q-a> <q-a d="tutorials/scripting/debug/overview_of_debugging_tools">Where do push_error and push_warning show up?</q-a></div></li>
   <li>Add it as an autoload: <b>Project Settings → Globals → Autoload</b>, path <code>res://scripts/save.gd</code>, name <code>Save</code>, <b>+ Add</b>. Make sure <code>Game</code> is listed <em>above</em> <code>Save</code> (use the arrows on the right if not).
     <aside class="why"><p>Autoloads start in list order. <code>Save</code> loads the game in its <code>_ready</code>, so <code>Game</code> must already exist. Loading inside an autoload, before the main scene starts, also means every screen sees the loaded numbers the moment it opens.</p></aside></li>
   <li>For now, save when the window closes. Add to <code>save.gd</code>:
@@ -2767,7 +2776,7 @@ GEN_WATERING_CAN,Watering Can,Regadera
 <h2>Fonts</h2>
 <div class="meta"><span class="chip">15 minutes</span></div>
 <p>A font is the cheapest way to give an interface personality.</p>
-<div class="qs"><q-a d="tutorials/ui/gui_using_fonts">How do fonts work in Godot?</q-a> <q-a c="FontFile" h="class-fontfile-property-fallbacks">What are fallback fonts?</q-a></div>
+<div class="qs"><q-a d="tutorials/ui/gui_using_fonts">How do fonts work in Godot?</q-a> <q-a c="Font" h="class-font-property-fallbacks">What are fallback fonts?</q-a></div>
 <ol class="steps">
   <li>Browse <a href="https://fonts.google.com/" target="_blank" rel="noopener">Google Fonts</a>. Every font there is free to use in games (they're under the SIL Open Font License or Apache license).
     <span data-if="pixel">For pixel art, try <b>Pixelify Sans</b> or <b>Silkscreen</b>.</span>
@@ -3153,7 +3162,7 @@ func _on_support_pressed() -> void:
   <li><b>Steam</b>: sell extras as DLC (simplest), checked with GodotSteam's <code>isDLCInstalled</code>.</li>
 </ul>
 <p>Store purchases in the save (e.g. a <code>"purchases"</code> list in <code>to_dict</code>) <em>and</em> re-check them with the store at startup, so a hard reset or new device doesn't lose them.</p>
-<div class="qs"><q-a d="tutorials/platform/android/android_in_app_purchases">How do Android in-app purchases work in Godot?</q-a> <q-a d="tutorials/platform/ios/plugins_for_ios">How do iOS plugins work?</q-a></div>
+<div class="qs"><q-a d="tutorials/platform/android/android_in_app_purchases">How do Android in-app purchases work in Godot?</q-a> <q-a d="tutorials/platform/ios/ios_plugin">How do iOS plugins work?</q-a></div>
 </div>
 </article>
 
@@ -3644,7 +3653,7 @@ func _update_layers() -> void:
 <h2>About this part</h2>
 <div class="meta"><span class="chip">2 minutes</span></div>
 <p>Sprout Empire uses a fraction of Godot. This part tours the rest of the engine's major features, each with a small exercise that adds something to your idle game, so you learn the feature in a project you already understand. The chapters are independent: do them in any order, or skip the ones you'll never need.</p>
-<aside class="why"><p>Some of these exercises are decorative (physics sprouts, a tile garden) or optional features (multiplayer gifting). They're chosen because each is the smallest useful thing you can build with the feature in an idle game, not because your game needs all of them. A good idle game can stop at Part 7.</p></aside>
+<aside class="why"><p>Some of these exercises are decorative (physics sprouts, a tile garden) or optional features (multiplayer gifting). They're chosen because each is the smallest useful thing you can build with the feature in an idle game, not because your game needs all of them. A good idle game can stop at Part 7. For deeper dives into the parts of Godot an idle game doesn't need at all, Part 10 builds a set of <a href="#mg-intro">mini games</a>.</p></aside>
 </article>
 
 <article class="ch" id="input-map" data-part="9" data-title="Input map, shortcuts and controllers">
@@ -4489,7 +4498,7 @@ public partial class Game : Node
 <article class="ch" id="gdextension" data-part="9" data-title="GDExtension: native code">
 <h2>GDExtension: native code</h2>
 <div class="meta"><span class="chip">Reading</span></div>
-<div class="qs"><q-a d="tutorials/scripting/gdextension/what_is_gdextension">What is GDExtension?</q-a> <q-a d="tutorials/scripting/gdextension/gdextension_cpp_example">How do I write a C++ GDExtension?</q-a></div>
+<div class="qs"><q-a d="engine_details/engine_api/gdextension/what_is_gdextension">What is GDExtension?</q-a> <q-a d="tutorials/scripting/cpp/gdextension_cpp_example">How do I write a C++ GDExtension?</q-a></div>
 <p>GDExtension lets you write parts of the game in C++ (or Rust, Swift and others through community bindings) and use them from GDScript as if they were built-in nodes. You'd reach for it to:</p>
 <ul>
   <li>do maths far faster than GDScript allows (a big-number type for games beyond 10<sup>308</sup>, or simulating millions of things);</li>
@@ -4562,17 +4571,1885 @@ func _play_intro() -> void:
   <li><b>Expression</b> for evaluating maths from text, handy for a debug console or for writing upgrade formulas in data files. <q-a d="tutorials/scripting/evaluating_expressions">What is Expression?</q-a></li>
   <li><b>Custom resource formats and import plugins</b> to load your own file types (say, a balance spreadsheet directly). <q-a d="tutorials/plugins/editor/import_plugins">What are import plugins?</q-a></li>
   <li><b>Godot runs on the web and on Android too.</b> The editor itself can run in a browser or on an Android tablet, if you want to tinker away from your desk. <q-a d="tutorials/editor/using_the_web_editor">What is the web editor?</q-a></li>
-  <li><b>Contributing to Godot.</b> It's free, open source, and run by its community. Reporting bugs, improving docs and donating all keep it going. <q-a d="contributing/ways_to_contribute">How can I contribute?</q-a></li>
+  <li><b>Contributing to Godot.</b> It's free, open source, and run by its community. Reporting bugs, improving docs and donating all keep it going. <q-a u="https://contributing.godotengine.org/en/latest/organization/how_to_contribute.html">How can I contribute?</q-a></li>
 </ul>
+</article>
+
+<!-- ===================================================================== -->
+<!-- PART 10: MINI GAMES -->
+<!-- ===================================================================== -->
+<article class="ch" id="mg-intro" data-part="10" data-title="About the arcade">
+<h2>About the arcade</h2>
+<div class="meta"><span class="chip">5 minutes</span></div>
+<p>Idle games keep you inside a small part of Godot: Controls, a little animation, saving. Part 9 toured the rest one small exercise at a time. This part goes further. You'll build an <b>Arcade</b> tab with eight short mini games. Each one takes about a minute to play, pays out sprouts, and makes you use a part of Godot that an idle game never would: character movement, collision layers, pathfinding, rigid bodies and joints, music timing, drag and drop, 3D, and split screen.</p>
+<table>
+<tr><th>Mini game</th><th>What it teaches</th></tr>
+<tr><td><a href="#mg-arcade">The arcade itself</a></td><td>SubViewports, pausing and process modes, custom Resources, keeping the idle game running underneath</td></tr>
+<tr><td><a href="#mg-catcher">Seed Catcher</a></td><td>A platformer: CharacterBody2D, game feel (coyote time, jump buffering), one-way platforms, collision layers, Area2D pickups</td></tr>
+<tr><td><a href="#mg-blaster">Aphid Blaster</a></td><td>Top-down action: twin-stick aiming, spawning bullets, enemies on Path2D, screen shake with noise, per-instance shader flashes</td></tr>
+<tr><td><a href="#mg-maze">Root Maze</a></td><td>Procedural generation with seeds (a daily maze), TileMapLayer from code, AStarGrid2D pathfinding, grid movement</td></tr>
+<tr><td><a href="#mg-pinball">Pollen Pinball</a></td><td>Rigid bodies, physics materials, continuous collision, kinematic flippers, joints, impulses</td></tr>
+<tr><td><a href="#mg-rhythm">Beat Bloom</a></td><td>Rhythm: syncing gameplay to music, output latency, audio buses, a spectrum analyzer, calibration</td></tr>
+<tr><td><a href="#mg-sorter">Seed Sorter</a></td><td>Control drag and drop, drag previews, a keyboard alternative for accessibility</td></tr>
+<tr><td><a href="#mg-greenhouse">Greenhouse Run</a></td><td>3D: CharacterBody3D, CSG level building, SpringArm3D camera, environment and fog, MultiMesh grass</td></tr>
+<tr><td><a href="#mg-duel">Seed Duel</a></td><td>Local multiplayer: split screen with two cameras on one shared world, per-device controls</td></tr>
+<tr><td><a href="#mg-polish">Arcade polish</a></td><td>Touch controls, controller rumble and phone vibration, adding your own mini game</td></tr>
+</table>
+<aside class="why"><p><b>Why mini games in an idle game?</b> Plenty of idle games have them (fishing, a slot machine, a little puzzle) because they give active players something to do between purchases. We pay rewards in <em>seconds of production</em>, capped per game, so playing is worth more than waiting but never breaks the economy you balanced in Part 4. Mainly, though, they're a reason to learn the rest of Godot in a project you already know.</p></aside>
+<aside class="tip"><p>Build the arcade first. After that, the mini games are independent, so you can do them in any order and skip any you like. Every one uses plain shapes (ColorRects, gradients and simple meshes) so you don't need new art. Swap in your own art from Part 5 whenever you want. If you'd like a fully guided game first, Godot's official tutorial covers a similar top-down game. <q-a d="getting_started/first_2d_game/index">How does Godot's "Your first 2D game" tutorial work?</q-a></p></aside>
+</article>
+
+<article class="ch" id="mg-arcade" data-part="10" data-title="Build the arcade">
+<h2>Build the arcade</h2>
+<div class="meta"><span class="chip">50 minutes</span><span class="chip">Do this one first</span></div>
+<div class="qs"><q-a d="tutorials/rendering/viewports">What is a Viewport, and what is a SubViewport for?</q-a> <q-a d="tutorials/scripting/pausing_games">How does pausing work?</q-a> <q-a d="tutorials/scripting/resources">What is a Resource?</q-a></div>
+<p>The arcade is an overlay that sits on top of the main screen. It plays one mini game at a time inside a <b>SubViewport</b>, a separate little screen with its own 2D world, physics and camera. When the game ends, the arcade pays the reward and closes. The idle game keeps earning the whole time.</p>
+<aside class="why"><p><b>Why a SubViewport and not a scene change?</b> Changing scenes would throw away the main screen and rebuild it afterwards. A SubViewport keeps everything in place, gives each mini game its own physics space (so the falling sprouts from Part 9 never collide with pinballs), and lets us design every mini game for one fixed size, <b>640 × 360</b>, which is then scaled to fit any screen. That's the same trick Part 1 used for the whole game, applied to one box.</p></aside>
+
+<h3>Input actions</h3>
+<ol class="steps">
+  <li>Open <b>Project → Project Settings → Input Map</b>. Add these actions, binding keys and controller inputs to each (click the <b>+</b> next to an action, then press a key or a controller button, or pick a joypad axis from the list):
+    <ul>
+      <li><code>mg_left</code>: <kbd>A</kbd>, <kbd>←</kbd>, D-pad left, left stick left</li>
+      <li><code>mg_right</code>: <kbd>D</kbd>, <kbd>→</kbd>, D-pad right, left stick right</li>
+      <li><code>mg_up</code>: <kbd>W</kbd>, <kbd>↑</kbd>, D-pad up, left stick up</li>
+      <li><code>mg_down</code>: <kbd>S</kbd>, <kbd>↓</kbd>, D-pad down, left stick down</li>
+      <li><code>mg_action</code>: <kbd>Space</kbd>, <kbd>Enter</kbd>, bottom face button, left mouse button</li>
+      <li><code>mg_pause</code>: <kbd>Esc</kbd>, <kbd>P</kbd>, Start</li>
+    </ul>
+    <div class="qs"><q-a d="tutorials/inputs/input_examples">How do I read input actions?</q-a></div></li>
+  <li>Still in Project Settings, open <b>Layer Names → 2D Physics</b> and name the first five layers <code>world</code>, <code>player</code>, <code>pickups</code>, <code>enemies</code> and <code>shots</code>. Then name the same five under <b>3D Physics</b>.
+    <aside class="why"><p>Named layers turn the collision checkboxes into readable labels. From now on, "Layer: player, Mask: world" tells you at a glance that something <em>is</em> a player and <em>bumps into</em> the world. <q-a d="tutorials/physics/physics_introduction#collision-layers-and-masks">What are collision layers and masks?</q-a></p></aside></li>
+</ol>
+
+<h3>The mini game base class</h3>
+<ol class="steps">
+  <li>In the FileSystem dock, create a folder <code>minigames</code>. Inside it, create a new script <code>mini_game.gd</code> (right-click the folder → <b>New → Script…</b>, Inherits <code>Node</code>):
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/mini_game.gd">
+class_name MiniGame
+extends Node
+## Base for every mini game. A mini game is designed for a 640×360 screen,
+## reports its score as it changes, and calls end_game() when it's over.
+
+signal score_changed(score: int)
+signal finished(score: int)
+
+const SIZE := Vector2(640, 360)
+
+var score: int = 0:
+	set(value):
+		score = maxi(value, 0)
+		score_changed.emit(score)
+
+var _over := false
+
+
+## Ends the game once. The arcade freezes the game and pays the reward.
+func end_game() -> void:
+	if _over:
+		return
+	_over = true
+	finished.emit(score)
+</script>
+    <div class="qs"><q-a d="tutorials/scripting/gdscript/gdscript_basics#properties-setters-and-getters">How does the score setter work?</q-a> <q-a d="tutorials/scripting/gdscript/gdscript_basics#inheritance">What does extends MiniGame mean?</q-a></div>
+    <aside class="why"><p>The base class extends plain <code>Node</code>, not Node2D, so 2D and 3D mini games can share it. Every mini game talks to the arcade through just two signals, so the arcade never needs to know how any particular game works.</p></aside></li>
+  <li>Create <code>minigames/mini_game_info.gd</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/mini_game_info.gd">
+class_name MiniGameInfo
+extends Resource
+## Describes one mini game for the Arcade tab.
+
+@export var id: String = ""
+@export var title: String = ""
+@export_multiline var description: String = ""
+@export var scene: PackedScene
+## Lifetime sprouts needed before the game unlocks.
+@export var unlock_at: float = 0.0
+## How many seconds of production one point is worth.
+@export var seconds_per_point: float = 3.0
+## Pause the idle game's music while playing (for games with their own music).
+@export var pauses_music: bool = false
+</script>
+    <aside class="why"><p>This is the same pattern as <code>GeneratorData</code> in Part 2: content lives in Resources you edit in the Inspector, and code reads them. Adding a ninth mini game later means creating one file, not editing the arcade.</p></aside></li>
+  <li>Open <code>data/game_database.gd</code> and add a line under the others:
+<script type="text/x-code" data-lang="gd" data-file="res://data/game_database.gd">
+@export var mini_games: Array[MiniGameInfo] = []
+</script></li>
+</ol>
+
+<h3>Best scores in the save</h3>
+<ol class="steps">
+  <li>In <code>scripts/game.gd</code>, add a variable below <code>stats</code>, and a function at the end of the file:
+<script type="text/x-code" data-lang="gd" data-file="res://scripts/game.gd">
+## Best score per mini game id. Kept through replanting.
+var best_scores: Dictionary = {}
+
+
+## Records a score. Returns true if it's a new best.
+func record_best(id: String, new_score: int) -> bool:
+	if new_score <= int(best_scores.get(id, 0)):
+		return false
+	best_scores[id] = new_score
+	return true
+</script></li>
+  <li>Still in <code>game.gd</code>, add <code>"best_scores": best_scores,</code> as a new line inside the dictionary that <code>to_dict()</code> returns, and add this to <code>from_dict()</code> just before <code>buff_multiplier = 1.0</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://scripts/game.gd">
+	best_scores = {}
+	var saved_best: Dictionary = d.get("best_scores", {})
+	for id in saved_best:
+		best_scores[str(id)] = int(saved_best[id])
+</script>
+    <aside class="why"><p>We don't bump <code>SAVE_VERSION</code>. Old saves simply don't have <code>best_scores</code>, and <code>d.get(..., {})</code> fills in an empty one. A migration is only needed when existing data changes meaning, not when new optional data is added. (<a href="#save-migration">Change the save format safely</a> covers the difference.)</p></aside></li>
+  <li>Add one line to the top of <code>_ready()</code> in <code>game.gd</code>, and the same line to the top of <code>_ready()</code> in <code>save.gd</code> and <code>audio.gd</code>:
+<script type="text/x-code" data-lang="gd">
+	process_mode = Node.PROCESS_MODE_ALWAYS
+</script>
+    <aside class="why"><p>The arcade can pause the game tree, and a paused tree stops every node whose process mode says so. Autoloads inherit "pausable" from the root by default, so without this line, pausing a mini game would also pause your sprout income, the autosave timer and the music. An idle game should never stop earning. <q-a c="Node" h="class-node-property-process-mode">What are the process modes?</q-a></p></aside></li>
+</ol>
+
+<h3>The arcade overlay</h3>
+<p>Build this scene. The <b>%</b> marks unique names.</p>
+<pre class="tree"><b>Arcade</b> <i>(CanvasLayer)</i>                          arcade.gd
+├─ <b>Dim</b> <i>(ColorRect)</i>
+├─ <b>Margin</b> <i>(MarginContainer)</i>
+│  └─ <b>Frame</b> <i>(VBoxContainer)</i>
+│     ├─ <b>TopBar</b> <i>(HBoxContainer)</i>
+│     │  ├─ <b>Title</b> <i>(Label)</i>                    %
+│     │  ├─ <b>Score</b> <i>(Label)</i>                    %
+│     │  ├─ <b>PauseButton</b> <i>(Button)</i>             %
+│     │  └─ <b>QuitButton</b> <i>(Button)</i>              %
+│     └─ <b>Aspect</b> <i>(AspectRatioContainer)</i>
+│        └─ <b>GameView</b> <i>(SubViewportContainer)</i>   %
+│           └─ <b>GameViewport</b> <i>(SubViewport)</i>     %
+├─ <b>PauseMenu</b> <i>(PanelContainer)</i>                %
+│  └─ <b>VBox</b> <i>(VBoxContainer)</i>
+│     ├─ <b>PausedLabel</b> <i>(Label)</i>
+│     ├─ <b>ResumeButton</b> <i>(Button)</i>               %
+│     └─ <b>LeaveButton</b> <i>(Button)</i>                %
+└─ <b>Results</b> <i>(AcceptDialog)</i>                    %</pre>
+<ol class="steps">
+  <li>Create a new scene with a <b>CanvasLayer</b> root named <code>Arcade</code>. Set its <b>Layer</b> to <code>10</code> and, under <b>Process → Mode</b>, choose <b>Always</b>. Save it as <code>minigames/arcade.tscn</code>.
+    <div class="qs"><q-a d="tutorials/2d/canvas_layers">What is a CanvasLayer?</q-a></div>
+    <aside class="why"><p>Layer 10 draws above the main screen and its effects. Process mode <b>Always</b> keeps the top bar and the pause menu working while the mini game is paused.</p></aside></li>
+  <li>Add <code>Dim</code> (ColorRect, <b>Full Rect</b>, color black with alpha about <code>200</code>). Leave its <b>Mouse → Filter</b> at <b>Stop</b>.
+    <aside class="why"><p>A ColorRect with filter Stop swallows every click, so nothing underneath (like the big sprout button) can be clicked by accident while you play.</p></aside></li>
+  <li>Add <code>Margin</code> (MarginContainer, <b>Full Rect</b>, all four margins <code>16</code>), then <code>Frame</code> inside it (VBoxContainer). Inside <code>Frame</code> add <code>TopBar</code> (HBoxContainer) with two Labels <code>Title</code> and <code>Score</code> (tick <b>Expand</b> horizontally on <code>Score</code> and set its <b>Horizontal Alignment</b> to <b>Right</b>), then two Buttons, <code>PauseButton</code> (text <code>Pause</code>) and <code>QuitButton</code> (text <code>Quit</code>).</li>
+  <li>Add <code>Aspect</code> to <code>Frame</code> (AspectRatioContainer). Tick <b>Expand</b> vertically, and set <b>Ratio</b> to <code>1.7778</code> (16 ÷ 9).
+    <div class="qs"><q-a c="AspectRatioContainer">What does an AspectRatioContainer do?</q-a></div></li>
+  <li>Add <code>GameView</code> to <code>Aspect</code> (SubViewportContainer) and tick <b>Stretch</b>. Inside it, add <code>GameViewport</code> (SubViewport). On <code>GameViewport</code>:
+    <ul>
+      <li>tick <b>Own World 3D</b> (so 3D mini games don't share a world with the diorama from Part 9),</li>
+      <li>under <b>Size 2D Override</b> enter <code>640</code> × <code>360</code> and tick <b>Size 2D Override Stretch</b>.</li>
+    </ul>
+    <div class="qs"><q-a c="SubViewport" h="class-subviewport-property-size-2d-override">What does Size 2D Override do?</q-a> <q-a c="SubViewportContainer" h="class-subviewportcontainer-property-stretch">What does Stretch do on a SubViewportContainer?</q-a></div>
+    <aside class="why"><p>The container sizes the SubViewport to whatever space it has, and the 2D override then maps that space onto a fixed 640 × 360 world. Mini games can place things at fixed coordinates, like "the floor is at y = 350", and they look right on a phone and on a 4K monitor.</p></aside></li>
+  <li>Add <code>PauseMenu</code> (PanelContainer) as a child of the root, choose the <b>Center</b> anchor preset, and set its <b>Process → Mode</b> to <b>When Paused</b>. Inside, a VBoxContainer with a Label (<code>Paused</code>) and two Buttons, <code>ResumeButton</code> (<code>Resume</code>) and <code>LeaveButton</code> (<code>Leave game</code>). Hide <code>PauseMenu</code> with the eye icon.</li>
+  <li>Add <code>Results</code> (AcceptDialog) to the root. Set its <b>Title</b> to <code>Game over</code>.</li>
+  <li>Attach this script to <code>Arcade</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/arcade.gd">
+class_name Arcade
+extends CanvasLayer
+## Plays one mini game at a time on top of the main screen, then pays out.
+
+signal closed
+
+## No single game pays more than this many seconds of production.
+const MAX_REWARD_SECONDS := 600.0
+
+@onready var title: Label = %Title
+@onready var score_label: Label = %Score
+@onready var game_view: SubViewportContainer = %GameView
+@onready var game_viewport: SubViewport = %GameViewport
+@onready var pause_menu: Control = %PauseMenu
+@onready var results: AcceptDialog = %Results
+
+var _game: MiniGame
+var _info: MiniGameInfo
+var _low_processor_before := false
+
+
+func _ready() -> void:
+	hide()
+	%PauseButton.pressed.connect(set_paused.bind(true))
+	%ResumeButton.pressed.connect(set_paused.bind(false))
+	%QuitButton.pressed.connect(_quit_early)
+	%LeaveButton.pressed.connect(_quit_early)
+	results.confirmed.connect(close)
+	results.canceled.connect(close)
+
+
+func is_playing() -> bool:
+	return visible
+
+
+func open(info: MiniGameInfo) -> void:
+	if _game:
+		return
+	_info = info
+	_game = info.scene.instantiate()
+	_game.score_changed.connect(_on_score_changed)
+	_game.finished.connect(_on_finished)
+	game_view.process_mode = Node.PROCESS_MODE_PAUSABLE
+	game_viewport.add_child(_game)
+	title.text = info.title
+	_on_score_changed(0)
+	# Action games need a steady frame rate; idle screens don't.
+	_low_processor_before = OS.low_processor_usage_mode
+	OS.low_processor_usage_mode = false
+	_set_music_paused(info.pauses_music)
+	show()
+
+
+func close() -> void:
+	set_paused(false)
+	if _game:
+		_game.queue_free()
+		_game = null
+	OS.low_processor_usage_mode = _low_processor_before
+	_set_music_paused(false)
+	hide()
+	closed.emit()
+
+
+func set_paused(value: bool) -> void:
+	get_tree().paused = value
+	pause_menu.visible = value
+
+
+func reward_for(points: int) -> float:
+	var seconds := minf(points * _info.seconds_per_point, MAX_REWARD_SECONDS)
+	# Early on, production is tiny, so a click-based minimum keeps it worthwhile.
+	return maxf(seconds * Game.sprouts_per_second(), points * Game.click_power())
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if visible and _game and event.is_action_pressed("mg_pause"):
+		set_paused(not get_tree().paused)
+		get_viewport().set_input_as_handled()
+
+
+func _on_score_changed(new_score: int) -> void:
+	score_label.text = "Score %d" % new_score
+
+
+func _on_finished(final_score: int) -> void:
+	# Freeze the game where it is, behind the results.
+	game_view.process_mode = Node.PROCESS_MODE_DISABLED
+	var reward := reward_for(final_score)
+	Game.earn(reward)
+	var best := Game.record_best(_info.id, final_score)
+	results.dialog_text = "Score: %d%s\nYou earned %s sprouts." % [
+			final_score, "  (new best!)" if best else "", NumberFormat.short(reward)]
+	results.popup_centered()
+
+
+func _quit_early() -> void:
+	# Leaving pays nothing; finishing is what earns the reward.
+	close()
+
+
+func _set_music_paused(value: bool) -> void:
+	var music := Audio.get_node_or_null("Music") as AudioStreamPlayer
+	if music:
+		music.stream_paused = value
+</script>
+    <div class="qs"><q-a c="OS" h="class-os-property-low-processor-usage-mode">What is low processor usage mode?</q-a> <q-a c="AcceptDialog">What is an AcceptDialog?</q-a> <q-a d="tutorials/scripting/gdscript/gdscript_basics#lambda-functions">What does .bind() do?</q-a></div>
+    <aside class="why"><p><b>Process modes do all the pausing work.</b> <code>GameView</code> is <b>Pausable</b>, so pausing the tree freezes the mini game. The arcade root is <b>Always</b>, so its buttons still work. The pause menu is <b>When Paused</b>, so it only runs while paused. When a game ends we set <code>GameView</code> to <b>Disabled</b>, which freezes it without pausing anything else.</p>
+    <p><b>Rewards</b> are capped at ten minutes of production. A run takes about a minute, so playing beats idling by up to ten times: enough to feel worth it, not enough to make the shop pointless.</p></aside></li>
+</ol>
+
+<h3>The Arcade tab</h3>
+<ol class="steps">
+  <li>Open <code>main.tscn</code>. Drag <code>minigames/arcade.tscn</code> from the FileSystem dock onto <code>Main</code> so it becomes the <em>last</em> child. Make it a unique name (<code>%Arcade</code>).</li>
+  <li>Select <code>Tabs</code> and add a <b>ScrollContainer</b> named <code>Arcade</code> (this becomes the tab's title). Inside it add a <b>VBoxContainer</b> named <code>ArcadeList</code>, tick <b>Expand</b> horizontally, and make it a unique name.</li>
+  <li>In <code>main.gd</code>, add these variables with the other <code>@onready</code> lines:
+<script type="text/x-code" data-lang="gd" data-file="res://scenes/main.gd">
+@onready var arcade: Arcade = %Arcade
+@onready var arcade_list: VBoxContainer = %ArcadeList
+</script></li>
+  <li>Add a call to <code>_build_arcade()</code> in <code>_ready()</code>, right after <code>_build_buy_modes()</code>, and add these functions to <code>main.gd</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://scenes/main.gd">
+func _build_arcade() -> void:
+	for info: MiniGameInfo in Game.DB.mini_games:
+		var button := Button.new()
+		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		button.custom_minimum_size.y = 64
+		button.set_meta("info", info)
+		button.pressed.connect(arcade.open.bind(info))
+		arcade_list.add_child(button)
+	arcade.closed.connect(_update_arcade)
+	var timer := Timer.new()
+	timer.wait_time = 1.0
+	timer.autostart = true
+	timer.timeout.connect(_update_arcade)
+	add_child(timer)
+	_update_arcade()
+
+
+func _update_arcade() -> void:
+	for button: Button in arcade_list.get_children():
+		var info: MiniGameInfo = button.get_meta("info")
+		var unlocked: bool = Game.stats["lifetime_earned"] >= info.unlock_at
+		button.disabled = not unlocked
+		if unlocked:
+			button.text = "%s  ·  best %d\n%s" % [info.title, Game.best_scores.get(info.id, 0), info.description]
+		else:
+			button.text = "%s\nUnlocks at %s lifetime sprouts" % [info.title, NumberFormat.short(info.unlock_at)]
+</script>
+    <div class="qs"><q-a c="Object" h="class-object-method-set-meta">What is set_meta for?</q-a></div>
+    <aside class="why"><p>The list refreshes once a second rather than on every <code>sprouts_changed</code>, which fires every frame. Unlocks don't need frame-perfect timing, and rebuilding button text 60 times a second would waste battery.</p></aside></li>
+  <li>Add this as the very first line of <code>_unhandled_input</code> in <code>main.gd</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://scenes/main.gd">
+	if arcade.is_playing():
+		return
+</script>
+    <aside class="why"><p>The mini games use <kbd>Space</kbd> for jumping, and <kbd>Space</kbd> is also the "tap" shortcut from Part 9. Without this line, every jump would also click the big sprout.</p></aside></li>
+</ol>
+<p>The arcade is ready, but empty. Each of the following chapters adds one game and finishes by registering it like this:</p>
+<ol class="steps">
+  <li>Right-click <code>data/</code> → <b>New → Resource…</b>, choose <b>MiniGameInfo</b>, and save it as <code>data/minigames/&lt;id&gt;.tres</code>. Fill in <b>Id</b>, <b>Title</b>, <b>Description</b>, <b>Scene</b> (drag the mini game's <code>.tscn</code> onto it), <b>Unlock At</b> and <b>Seconds Per Point</b>.</li>
+  <li>Open <code>data/database.tres</code>, expand <b>Mini Games</b>, click <b>Add Element</b> and drag your new <code>.tres</code> into the empty slot.</li>
+</ol>
+</article>
+
+<article class="ch" id="mg-catcher" data-part="10" data-title="Seed Catcher: a platformer">
+<h2>Seed Catcher: a platformer</h2>
+<div class="meta"><span class="chip">60 minutes</span></div>
+<div class="qs"><q-a d="tutorials/physics/using_character_body_2d">How does CharacterBody2D work?</q-a> <q-a d="tutorials/physics/using_area_2d">What is an Area2D for?</q-a> <q-a d="tutorials/2d/2d_movement">How do I move a character in 2D?</q-a></div>
+<p>Run and jump across ledges for 45 seconds to catch falling seeds. Golden seeds score, rotten brown ones cost three points. This is the classic first game in any engine, and the place to learn what makes jumping feel good.</p>
+<pre class="tree"><b>SeedCatcher</b> <i>(Node)</i>                         seed_catcher.gd
+├─ <b>Background</b> <i>(ColorRect)</i>
+├─ <b>Ground</b> <i>(StaticBody2D)</i>
+│  ├─ <b>Shape</b> <i>(CollisionShape2D)</i>
+│  └─ <b>Look</b> <i>(ColorRect)</i>
+├─ <b>LedgeLeft</b>, <b>LedgeRight</b>, <b>LedgeTop</b> <i>(StaticBody2D, same children)</i>
+├─ <b>Player</b> <i>(CharacterBody2D)</i>                     catcher_player.gd
+│  ├─ <b>Shape</b> <i>(CollisionShape2D)</i>
+│  └─ <b>Look</b> <i>(ColorRect)</i>
+├─ <b>Seeds</b> <i>(Node2D)</i>
+├─ <b>SpawnTimer</b> <i>(Timer)</i>
+├─ <b>Clock</b> <i>(Timer)</i>
+└─ <b>TimeLabel</b> <i>(Label)</i></pre>
+<h3>The level</h3>
+<ol class="steps">
+  <li>New scene, root <b>Node</b> named <code>SeedCatcher</code>. Save it as <code>minigames/seed_catcher/seed_catcher.tscn</code>.</li>
+  <li>Add <code>Background</code> (ColorRect): <b>Position</b> <code>(0, 0)</code>, <b>Size</b> <code>(640, 360)</code>, a sky color such as <code>#bfe3f2</code>.
+    <aside class="tip"><p>Turn on the 2D view's grid snapping (the magnet icon, then <b>Configure Snap…</b>, grid step <code>10</code>) to make placing things in this chapter easier. To see the 640 × 360 area, open this scene's 2D view: the blue rectangle is the project's window size, so just keep everything inside the top-left 640 × 360.</p></aside></li>
+  <li>Add <code>Ground</code> (StaticBody2D) at <b>Position</b> <code>(320, 350)</code>. Give it a <b>CollisionShape2D</b> named <code>Shape</code> with a <b>New RectangleShape2D</b>, <b>Size</b> <code>(640, 20)</code>. Add a ColorRect named <code>Look</code> with <b>Position</b> <code>(-320, -10)</code>, <b>Size</b> <code>(640, 20)</code> and a soil color.
+    <aside class="why"><p>A StaticBody2D is something other bodies collide with but which never moves itself. The CollisionShape2D is what physics sees; the ColorRect is only what you see. Keeping them separate is how Godot works everywhere: you can swap the look for real art later without touching the physics.</p></aside></li>
+  <li>Check <code>Ground</code>'s <b>Collision → Layer</b> is only <b>world</b> (layer 1) and clear its <b>Mask</b>: static things don't need to detect anything.</li>
+  <li>Select <code>Ground</code> and press <kbd>Ctrl</kbd>+<kbd>D</kbd> (<kbd>Cmd</kbd>+<kbd>D</kbd>) three times to duplicate it. Rename the copies and set them up as ledges:
+    <ul>
+      <li><code>LedgeLeft</code>: position <code>(140, 270)</code>, shape size <code>(160, 12)</code>, Look position <code>(-80, -6)</code> size <code>(160, 12)</code></li>
+      <li><code>LedgeRight</code>: position <code>(500, 270)</code>, same sizes</li>
+      <li><code>LedgeTop</code>: position <code>(320, 190)</code>, same sizes</li>
+    </ul>
+    <aside class="warn"><p>Duplicated shapes are <em>shared</em>. Before resizing a ledge's shape, click the shape's dropdown in the Inspector and choose <b>Make Unique</b>, or you'll resize the ground too. <q-a d="tutorials/scripting/resources">Why are resources shared between copies?</q-a></p></aside></li>
+  <li>On each ledge's <code>Shape</code>, tick <b>One Way Collision</b>. A small arrow appears showing the solid direction.
+    <aside class="why"><p>One-way platforms let the player jump up through a ledge from below and land on top of it. They're what makes a platformer level feel open instead of like a cage. <q-a c="CollisionShape2D" h="class-collisionshape2d-property-one-way-collision">What is one-way collision?</q-a></p></aside></li>
+</ol>
+<h3>The player</h3>
+<ol class="steps">
+  <li>Add <code>Player</code> (CharacterBody2D) at <code>(320, 320)</code>. <b>Collision → Layer</b>: only <b>player</b>. <b>Mask</b>: only <b>world</b>. Give it a <code>Shape</code> (CollisionShape2D) with a <b>New CapsuleShape2D</b>, radius <code>10</code>, height <code>32</code>, and a <code>Look</code> ColorRect at <code>(-10, -16)</code>, size <code>(20, 32)</code>, in a bright color.</li>
+  <li>Attach a new script to <code>Player</code>, saved as <code>minigames/seed_catcher/catcher_player.gd</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/seed_catcher/catcher_player.gd">
+extends CharacterBody2D
+## A gardener who runs and jumps, tuned for feel.
+
+const RUN_SPEED := 230.0
+const ACCELERATION := 1600.0
+const JUMP_VELOCITY := -420.0
+const GRAVITY := 1200.0
+## Falling is faster than rising, which makes jumps feel snappy, not floaty.
+const FALL_GRAVITY_MULTIPLIER := 1.7
+## Releasing jump early cuts the jump short, for small hops.
+const SHORT_HOP_MULTIPLIER := 2.5
+## You can still jump this long after running off a ledge.
+const COYOTE_TIME := 0.1
+## A jump pressed this long before landing still happens.
+const JUMP_BUFFER_TIME := 0.12
+
+var _coyote_left := 0.0
+var _buffer_left := 0.0
+
+@onready var look: ColorRect = $Look
+
+
+func _physics_process(delta: float) -> void:
+	var direction := Input.get_axis("mg_left", "mg_right")
+	velocity.x = move_toward(velocity.x, direction * RUN_SPEED, ACCELERATION * delta)
+
+	var jump_held := Input.is_action_pressed("mg_action") or Input.is_action_pressed("mg_up")
+	if Input.is_action_just_pressed("mg_action") or Input.is_action_just_pressed("mg_up"):
+		_buffer_left = JUMP_BUFFER_TIME
+	else:
+		_buffer_left -= delta
+
+	if is_on_floor():
+		_coyote_left = COYOTE_TIME
+	else:
+		_coyote_left -= delta
+		var gravity := GRAVITY
+		if velocity.y > 0.0:
+			gravity *= FALL_GRAVITY_MULTIPLIER
+		elif not jump_held:
+			gravity *= SHORT_HOP_MULTIPLIER
+		velocity.y += gravity * delta
+
+	if _buffer_left > 0.0 and _coyote_left > 0.0:
+		velocity.y = JUMP_VELOCITY
+		_buffer_left = 0.0
+		_coyote_left = 0.0
+
+	move_and_slide()
+	# Run off one side of the screen, come back on the other.
+	position.x = wrapf(position.x, 0.0, MiniGame.SIZE.x)
+	# Squash a little while moving fast: cheap, readable animation.
+	look.scale.y = 1.0 - clampf(absf(velocity.y) / 3000.0, 0.0, 0.15)
+</script>
+    <div class="qs"><q-a c="CharacterBody2D" h="class-characterbody2d-method-move-and-slide">What does move_and_slide do?</q-a> <q-a c="Input" h="class-input-method-get-axis">What does Input.get_axis return?</q-a> <q-a c="@GlobalScope" h="class-globalscope-method-move-toward">What does move_toward do?</q-a></div>
+    <aside class="why"><p><b>Coyote time and jump buffering</b> are invisible, and players notice immediately when they're missing. Without coyote time, a jump pressed one frame after running off a ledge does nothing and feels like a bug. Without buffering, a jump pressed just before landing is ignored. Both windows are about a tenth of a second: forgiving, but too short to feel like cheating.</p>
+    <p>We read input with <code>Input.is_action_pressed</code> in <code>_physics_process</code> (polling) instead of reacting to events, because movement needs to know what's held <em>every physics tick</em>, not just when something changes.</p></aside></li>
+  <li>Run the scene alone with <b>Run Current Scene</b> (<kbd>F6</kbd>, <kbd>Cmd</kbd>+<kbd>R</kbd> on a Mac) and play with the constants until jumping feels right to you. (The scene shows at the project's window size for now, in the top-left corner. That's expected; inside the arcade it fills the box.)</li>
+</ol>
+<h3>Falling seeds</h3>
+<ol class="steps">
+  <li>New scene, root <b>Area2D</b> named <code>FallingSeed</code>. <b>Layer</b>: only <b>pickups</b>. <b>Mask</b>: only <b>player</b>. Add a CollisionShape2D with a <b>CircleShape2D</b> radius <code>8</code>, and a ColorRect at <code>(-6, -8)</code> size <code>(12, 16)</code> in gold. Save as <code>minigames/seed_catcher/falling_seed.tscn</code>, and attach:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/seed_catcher/falling_seed.gd">
+class_name FallingSeed
+extends Area2D
+## Falls straight down. Reports when the player touches it.
+
+signal caught(points: int)
+
+var points := 1
+var speed := 120.0
+
+
+func _ready() -> void:
+	body_entered.connect(_on_body_entered)
+
+
+func _physics_process(delta: float) -> void:
+	position.y += speed * delta
+	rotation += delta * 2.0
+	if position.y > MiniGame.SIZE.y + 20.0:
+		queue_free()
+
+
+func _on_body_entered(_body: Node2D) -> void:
+	caught.emit(points)
+	queue_free()
+</script>
+    <aside class="why"><p>The seed only needs to <em>detect</em> the player, never push it, so it's an Area2D, not a physics body. Its mask is only <b>player</b>, so it ignores the ground and the other seeds completely: no wasted collision checks, and no need for <code>if body.name == "Player"</code> in the code.</p></aside></li>
+  <li>Back in <code>seed_catcher.tscn</code>, add <code>Seeds</code> (Node2D), <code>SpawnTimer</code> (Timer, <b>Wait Time</b> <code>0.8</code>, <b>Autostart</b> on), <code>Clock</code> (Timer, <b>Wait Time</b> <code>45</code>, <b>One Shot</b> on, <b>Autostart</b> on), and <code>TimeLabel</code> (Label at <code>(12, 8)</code>, font size <code>24</code>).</li>
+  <li>Attach a script to <code>SeedCatcher</code>, replacing the first line with <code>extends MiniGame</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/seed_catcher/seed_catcher.gd">
+extends MiniGame
+## Catch golden seeds for 45 seconds. Rotten ones cost points.
+
+const FALLING_SEED := preload("res://minigames/seed_catcher/falling_seed.tscn")
+const ROTTEN_CHANCE := 0.2
+
+@onready var seeds: Node2D = $Seeds
+@onready var spawn_timer: Timer = $SpawnTimer
+@onready var clock: Timer = $Clock
+@onready var time_label: Label = $TimeLabel
+
+var _rng := RandomNumberGenerator.new()
+
+
+func _ready() -> void:
+	spawn_timer.timeout.connect(_spawn)
+	clock.timeout.connect(end_game)
+
+
+func _process(_delta: float) -> void:
+	time_label.text = "%d" % ceili(clock.time_left)
+	# Seeds come faster as time runs out.
+	spawn_timer.wait_time = lerpf(0.35, 0.8, clock.time_left / clock.wait_time)
+
+
+func _spawn() -> void:
+	var falling: FallingSeed = FALLING_SEED.instantiate()
+	falling.position = Vector2(_rng.randf_range(20.0, SIZE.x - 20.0), -16.0)
+	falling.speed = _rng.randf_range(90.0, 170.0)
+	if _rng.randf() < ROTTEN_CHANCE:
+		falling.points = -3
+		falling.modulate = Color(0.45, 0.3, 0.2)
+	falling.caught.connect(func(points: int) -> void: score += points)
+	seeds.add_child(falling)
+</script>
+    <div class="qs"><q-a d="tutorials/math/random_number_generation">How does random number generation work?</q-a> <q-a c="Timer">What is a Timer?</q-a></div></li>
+  <li>Register the game (see the end of <a href="#mg-arcade">Build the arcade</a>): id <code>seed_catcher</code>, title <code>Seed Catcher</code>, description <code>Catch the golden seeds, dodge the rotten ones.</code>, Unlock At <code>100</code>, Seconds Per Point <code>4</code>.</li>
+  <li>Run the game, open the <b>Arcade</b> tab and play.</li>
+</ol>
+<aside class="tip"><p>Ideas to go further: an <b>AnimatedSprite2D</b> with run, jump and fall animations from your own sprite sheet, chosen in code from <code>velocity</code>. <q-a d="tutorials/2d/2d_sprite_animation">How do sprite animations work?</q-a></p></aside>
+</article>
+
+<article class="ch" id="mg-blaster" data-part="10" data-title="Aphid Blaster: top-down action">
+<h2>Aphid Blaster: top-down action</h2>
+<div class="meta"><span class="chip">75 minutes</span></div>
+<div class="qs"><q-a d="tutorials/scripting/instancing_with_signals">How do I spawn things like bullets?</q-a> <q-a c="Path2D">What is a Path2D?</q-a> <q-a c="PathFollow2D">What is a PathFollow2D?</q-a> <q-a c="Camera2D">What is a Camera2D?</q-a></div>
+<p>Aphids crawl across the garden in waves along curving paths. Move with WASD or the left stick, aim with the mouse (or in the direction you move, on a controller), and hold the action button to spray. You have three lives and 60 seconds.</p>
+<pre class="tree"><b>AphidBlaster</b> <i>(Node)</i>                         aphid_blaster.gd
+├─ <b>Background</b> <i>(ColorRect)</i>
+├─ <b>Camera</b> <i>(Camera2D)</i>                          shake_camera.gd
+├─ <b>Paths</b> <i>(Node2D)</i>
+│  ├─ <b>PathA</b> <i>(Path2D)</i>
+│  └─ <b>PathB</b> <i>(Path2D)</i>
+├─ <b>Player</b> <i>(CharacterBody2D)</i>                  blaster_player.gd
+│  ├─ <b>Shape</b> <i>(CollisionShape2D)</i>
+│  ├─ <b>Look</b> <i>(Polygon2D)</i>
+│  └─ <b>Muzzle</b> <i>(Marker2D)</i>
+├─ <b>Shots</b> <i>(Node2D)</i>
+├─ <b>WaveTimer</b> <i>(Timer)</i>
+├─ <b>Clock</b> <i>(Timer)</i>
+└─ <b>HUD</b> <i>(Label)</i></pre>
+<h3>The pieces</h3>
+<ol class="steps">
+  <li>Create the folder <code>minigames/aphid_blaster</code>. Make a new scene with root <b>Area2D</b> named <code>Shot</code>: <b>Layer</b> only <b>shots</b>, <b>Mask</b> only <b>enemies</b>. Children: a CollisionShape2D with a CircleShape2D of radius <code>4</code>, a ColorRect at <code>(-4, -2)</code> sized <code>(8, 4)</code> in pale blue (a water droplet), and a <b>VisibleOnScreenNotifier2D</b> named <code>Notifier</code>. Save as <code>shot.tscn</code> and attach:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/aphid_blaster/shot.gd">
+extends Area2D
+## A water droplet. Flies straight, hits the first aphid it touches.
+
+const SPEED := 520.0
+
+
+func _ready() -> void:
+	$Notifier.screen_exited.connect(queue_free)
+	area_entered.connect(_on_area_entered)
+
+
+func _physics_process(delta: float) -> void:
+	position += Vector2.RIGHT.rotated(rotation) * SPEED * delta
+
+
+func _on_area_entered(area: Area2D) -> void:
+	if area is Aphid:
+		(area as Aphid).hit()
+	queue_free()
+</script>
+    <div class="qs"><q-a c="VisibleOnScreenNotifier2D">What is a VisibleOnScreenNotifier2D?</q-a></div>
+    <aside class="why"><p>Every shot frees itself the moment it leaves the screen. Without that, a minute of holding the button would leave hundreds of invisible droplets flying forever, each checked for collisions every frame.</p></aside></li>
+  <li>Create <code>flash.gdshader</code> in the same folder (FileSystem dock → right-click → <b>New → Shader…</b>, type <b>canvas_item</b>):
+<script type="text/x-code" data-lang="shader" data-file="res://minigames/aphid_blaster/flash.gdshader">
+shader_type canvas_item;
+
+// 0 = normal colors, 1 = solid white. Animated when hit.
+uniform float flash : hint_range(0.0, 1.0) = 0.0;
+
+void fragment() {
+	COLOR.rgb = mix(COLOR.rgb, vec3(1.0), flash);
+}
+</script>
+    <div class="qs"><q-a d="tutorials/shaders/shader_reference/canvas_item_shader">What can a canvas_item shader do?</q-a></div></li>
+  <li>New scene, root <b>Area2D</b> named <code>Aphid</code>: <b>Layer</b> only <b>enemies</b>, <b>Mask</b> only <b>player</b>. Children: a CollisionShape2D with a CircleShape2D of radius <code>9</code>, and a <b>Polygon2D</b> named <code>Look</code>. In <code>Look</code>'s Inspector, open <b>Polygon</b>, set the array size to <code>6</code> and enter the points <code>(10, 0)</code>, <code>(4, 8)</code>, <code>(-8, 7)</code>, <code>(-10, 0)</code>, <code>(-8, -7)</code>, <code>(4, -8)</code>, then pick a bright green <b>Color</b>.</li>
+  <li>On <code>Look</code>, set <b>Material</b> to <b>New ShaderMaterial</b>, click it, and drag <code>flash.gdshader</code> onto its <b>Shader</b> slot. Then expand the material's <b>Resource</b> section and tick <b>Local to Scene</b>.
+    <aside class="why"><p>Resources are shared between every instance that uses them, which normally saves memory. Here it would be a bug: flashing one aphid would flash all of them, since they'd share one material. <b>Local to Scene</b> gives every aphid its own copy of the material when it's created. <q-a c="Resource" h="class-resource-property-resource-local-to-scene">What does Local to Scene do?</q-a></p></aside></li>
+  <li>Save as <code>aphid.tscn</code> and attach:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/aphid_blaster/aphid.gd">
+class_name Aphid
+extends Area2D
+## Crawls along its parent PathFollow2D. Two hits to squish.
+
+signal died
+
+var speed := 80.0
+## Seconds to wait before setting off, so a wave arrives in a line.
+var delay := 0.0
+var health := 2
+
+@onready var look: Polygon2D = $Look
+
+
+func _ready() -> void:
+	body_entered.connect(_on_body_entered)
+
+
+func _physics_process(delta: float) -> void:
+	if delay > 0.0:
+		delay -= delta
+		return
+	var follow := get_parent() as PathFollow2D
+	follow.progress += speed * delta
+	if follow.progress_ratio >= 1.0:
+		follow.queue_free()  # got away
+
+
+func hit() -> void:
+	health -= 1
+	var flash := create_tween()
+	flash.tween_property(look.material, "shader_parameter/flash", 0.0, 0.15).from(1.0)
+	if health <= 0:
+		died.emit()
+		get_parent().queue_free()
+
+
+func _on_body_entered(body: Node2D) -> void:
+	if body is BlasterPlayer:
+		(body as BlasterPlayer).take_hit()
+</script>
+    <aside class="why"><p>The aphid doesn't know which path it's on or where the player is. It just moves its parent PathFollow2D forward. The <em>path</em> decides the route, and you can redraw it in the editor without touching code.</p></aside></li>
+</ol>
+<h3>The player</h3>
+<ol class="steps">
+  <li>New scene for the game: root <b>Node</b> named <code>AphidBlaster</code>, saved as <code>aphid_blaster.tscn</code>. Add a <code>Background</code> ColorRect at <code>(0, 0)</code> sized <code>(640, 360)</code>, leafy green.</li>
+  <li>Add <code>Player</code> (CharacterBody2D) at <code>(320, 180)</code>, <b>Layer</b> only <b>player</b>, <b>Mask</b> only <b>world</b>. Give it a CollisionShape2D with a CircleShape2D of radius <code>10</code>, a Polygon2D <code>Look</code> with the points <code>(14, 0)</code>, <code>(-10, -9)</code>, <code>(-10, 9)</code> (an arrow pointing right), and a <b>Marker2D</b> named <code>Muzzle</code> at <code>(16, 0)</code>.</li>
+  <li>Attach to <code>Player</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/aphid_blaster/blaster_player.gd">
+class_name BlasterPlayer
+extends CharacterBody2D
+## Moves with WASD or a stick. Aims at the mouse, or where it's moving on a
+## controller. Sprays while the action button is held.
+
+signal hurt
+
+const SPEED := 200.0
+const FIRE_INTERVAL := 0.12
+const INVULNERABLE_TIME := 1.5
+const SHOT := preload("res://minigames/aphid_blaster/shot.tscn")
+
+## The node that new shots are added to.
+@export var shots_parent: Node2D
+
+var _cooldown := 0.0
+var _invulnerable := 0.0
+var _aim_with_mouse := true
+
+@onready var muzzle: Marker2D = $Muzzle
+
+
+func _input(event: InputEvent) -> void:
+	# Aim with whichever device was used last.
+	if event is InputEventMouseMotion:
+		_aim_with_mouse = true
+	elif event is InputEventJoypadMotion and absf((event as InputEventJoypadMotion).axis_value) > 0.5:
+		_aim_with_mouse = false
+
+
+func _physics_process(delta: float) -> void:
+	var direction := Input.get_vector("mg_left", "mg_right", "mg_up", "mg_down")
+	velocity = direction * SPEED
+	move_and_slide()
+	position = position.clamp(Vector2(12, 12), MiniGame.SIZE - Vector2(12, 12))
+
+	if _aim_with_mouse:
+		look_at(get_global_mouse_position())
+	elif direction != Vector2.ZERO:
+		rotation = direction.angle()
+
+	_invulnerable -= delta
+	# Blink while invulnerable.
+	visible = _invulnerable <= 0.0 or fmod(_invulnerable, 0.2) > 0.1
+
+	_cooldown -= delta
+	if Input.is_action_pressed("mg_action") and _cooldown <= 0.0:
+		_cooldown = FIRE_INTERVAL
+		var shot: Area2D = SHOT.instantiate()
+		shot.global_position = muzzle.global_position
+		shot.rotation = rotation + randf_range(-0.05, 0.05)
+		shots_parent.add_child(shot)
+
+
+func take_hit() -> void:
+	if _invulnerable > 0.0:
+		return
+	_invulnerable = INVULNERABLE_TIME
+	hurt.emit()
+</script>
+    <div class="qs"><q-a c="Input" h="class-input-method-get-vector">What does Input.get_vector do, and what's a deadzone?</q-a> <q-a d="tutorials/inputs/mouse_and_input_coordinates">How do mouse coordinates work?</q-a> <q-a d="tutorials/math/vector_math">What are vectors, angles and rotated()?</q-a></div>
+    <aside class="why"><p>Shots are added to a separate <code>Shots</code> node, not to the player. Children move with their parent, so shots added to the player would swing around every time it turned.</p>
+    <p><code>Input.get_vector</code> reads four actions as one direction and handles the stick's deadzone for you. Diagonals come out the same length as straight lines, so moving diagonally isn't 41% faster, a classic beginner bug.</p></aside></li>
+</ol>
+<h3>Paths, camera and waves</h3>
+<ol class="steps">
+  <li>Add <code>Paths</code> (Node2D) with two <b>Path2D</b> children, <code>PathA</code> and <code>PathB</code>. Select <code>PathA</code>: the toolbar above the 2D view shows path tools. Choose <b>Add Point</b> and click to place points: start just <em>outside</em> the left edge (around <code>(-30, 60)</code>), zig-zag across the screen, and finish outside the right edge. Drag from a point while holding <kbd>Shift</kbd> to pull out curve handles. Draw <code>PathB</code> differently, for example from the top edge to the bottom.
+    <div class="qs"><q-a d="tutorials/math/beziers_and_curves">How do Bézier curves work?</q-a></div></li>
+  <li>Add <code>Shots</code> (Node2D). Select <code>Player</code> and, in the Inspector, click <b>Shots Parent</b> → <b>Assign…</b> and pick <code>Shots</code>.
+    <aside class="why"><p>An exported node reference is set in the Inspector, so the player script doesn't hard-code where shots go. If you rename or move <code>Shots</code>, Godot updates the reference for you.</p></aside></li>
+  <li>Add <code>Camera</code> (Camera2D) at <code>(320, 180)</code>, and attach:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/aphid_blaster/shake_camera.gd">
+class_name ShakeCamera
+extends Camera2D
+## Shakes in proportion to "trauma", which fades away on its own.
+
+const MAX_OFFSET := 12.0
+const DECAY_PER_SECOND := 1.6
+
+var trauma := 0.0
+var _noise := FastNoiseLite.new()
+var _time := 0.0
+
+
+func _ready() -> void:
+	_noise.frequency = 0.1
+
+
+func add_trauma(amount: float) -> void:
+	trauma = minf(trauma + amount, 1.0)
+
+
+func _process(delta: float) -> void:
+	trauma = maxf(trauma - DECAY_PER_SECOND * delta, 0.0)
+	if trauma == 0.0 or Settings.reduce_motion:
+		offset = Vector2.ZERO
+		return
+	_time += delta * 60.0
+	var strength := trauma * trauma * MAX_OFFSET
+	offset = Vector2(_noise.get_noise_2d(_time, 0.0), _noise.get_noise_2d(0.0, _time)) * strength
+</script>
+    <div class="qs"><q-a c="FastNoiseLite">What is FastNoiseLite?</q-a> <q-a c="Camera2D" h="class-camera2d-property-offset">What does a camera's offset do?</q-a></div>
+    <aside class="why"><p><b>Why noise and not random numbers?</b> Random offsets jump to a new spot every frame, which looks like jitter. Noise drifts smoothly, which looks like a shake. Squaring the trauma means small hits barely shake and big hits shake a lot. The shake also respects the <b>Reduce motion</b> setting from Part 4.</p></aside></li>
+  <li>Add <code>WaveTimer</code> (Timer, <b>Wait Time</b> <code>3</code>, <b>Autostart</b> on), <code>Clock</code> (Timer, <b>Wait Time</b> <code>60</code>, <b>One Shot</b> and <b>Autostart</b> on) and a <code>HUD</code> Label at <code>(12, 8)</code>.</li>
+  <li>Attach to <code>AphidBlaster</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/aphid_blaster/aphid_blaster.gd">
+extends MiniGame
+## Squish aphid waves for 60 seconds. Three hits and you're out.
+
+const APHID := preload("res://minigames/aphid_blaster/aphid.tscn")
+const LIVES := 3
+
+@onready var paths: Node2D = $Paths
+@onready var player: BlasterPlayer = $Player
+@onready var camera: ShakeCamera = $Camera
+@onready var wave_timer: Timer = $WaveTimer
+@onready var clock: Timer = $Clock
+@onready var hud: Label = $HUD
+
+var _lives := LIVES
+var _wave := 0
+
+
+func _ready() -> void:
+	player.hurt.connect(_on_player_hurt)
+	wave_timer.timeout.connect(_spawn_wave)
+	clock.timeout.connect(end_game)
+	_spawn_wave()
+
+
+func _process(_delta: float) -> void:
+	hud.text = "Lives %d    %ds" % [_lives, ceili(clock.time_left)]
+
+
+func _spawn_wave() -> void:
+	_wave += 1
+	var path: Path2D = paths.get_children().pick_random()
+	var count := mini(3 + floori(_wave / 2.0), 10)
+	for i in count:
+		var follow := PathFollow2D.new()
+		follow.loop = false
+		path.add_child(follow)
+		var aphid: Aphid = APHID.instantiate()
+		aphid.speed = 70.0 + _wave * 6.0
+		aphid.delay = i * 0.35
+		aphid.died.connect(_on_aphid_died)
+		follow.add_child(aphid)
+
+
+func _on_aphid_died() -> void:
+	score += 1
+	camera.add_trauma(0.15)
+
+
+func _on_player_hurt() -> void:
+	_lives -= 1
+	camera.add_trauma(0.7)
+	if _lives <= 0:
+		end_game()
+</script>
+    <aside class="why"><p>Each aphid gets its own <b>PathFollow2D</b>, made in code. A PathFollow2D is a point that slides along its parent Path2D; whatever is inside it slides along too. Turning off <code>loop</code> lets <code>progress_ratio</code> reach 1.0 at the end of the path, which is how an aphid knows it got away.</p></aside></li>
+  <li>Register it: id <code>aphid_blaster</code>, title <code>Aphid Blaster</code>, description <code>Spray the aphids before they eat the garden.</code>, Unlock At <code>1000</code>, Seconds Per Point <code>2</code>.</li>
+</ol>
+<aside class="tip"><p>Ideas: a second pair of aim actions on the right stick for true twin-stick aiming (read them with another <code>Input.get_vector</code>); a <b>GPUParticles2D</b> splat when an aphid dies; or <b>AudioStreamPlayer2D</b> for sounds that pan left and right with position. <q-a c="AudioStreamPlayer2D">What is AudioStreamPlayer2D?</q-a></p></aside>
+</article>
+
+<article class="ch" id="mg-maze" data-part="10" data-title="Root Maze: generated levels and pathfinding">
+<h2>Root Maze: generated levels and pathfinding</h2>
+<div class="meta"><span class="chip">60 minutes</span></div>
+<div class="qs"><q-a d="tutorials/2d/using_tilesets">How do TileSets work?</q-a> <q-a d="tutorials/2d/using_tilemaps">How do TileMapLayers work?</q-a> <q-a c="AStarGrid2D">What is AStarGrid2D?</q-a> <q-a d="tutorials/math/random_number_generation">What is a random seed?</q-a></div>
+<p>A new maze grows every day. Collect the seeds hidden in its dead ends while a hungry beetle hunts you down. Everyone who plays on the same day gets the same maze, so players can compare scores.</p>
+<h3>Tiles</h3>
+<ol class="steps">
+  <li>In your art program, make a <b>60 × 20</b> pixel image with three 20 × 20 squares side by side: a dark wall, a light soil path, and a path square with a small seed drawn in the middle. Export it as <code>minigames/root_maze/maze_tiles.png</code>.
+    <div class="qs"><q-a d="tutorials/assets_pipeline/importing_images">How does Godot import images?</q-a></div></li>
+  <li>New scene, root <b>Node</b> named <code>RootMaze</code>, saved as <code>minigames/root_maze/root_maze.tscn</code>. Add a <code>Background</code> ColorRect at <code>(0, 0)</code>, size <code>(640, 360)</code>, dark brown.</li>
+  <li>Add a <b>Node2D</b> named <code>Maze</code> at <code>(10, 10)</code>. Inside it add a <b>TileMapLayer</b> named <code>Floor</code>.</li>
+  <li>With <code>Floor</code> selected, in the Inspector set <b>Tile Set</b> to <b>New TileSet</b>, click it, and set <b>Tile Size</b> to <code>20</code> × <code>20</code>.</li>
+  <li>Open the <b>TileSet</b> panel at the bottom of the editor. Drag <code>maze_tiles.png</code> into the panel's left-hand list, and answer <b>Yes</b> when asked to create tiles automatically. Three tiles appear, at atlas coordinates <code>(0, 0)</code> wall, <code>(1, 0)</code> path and <code>(2, 0)</code> seed.</li>
+  <li>Back in the Inspector, click the <b>Tile Set</b> dropdown and choose <b>Save As…</b>, saving it as <code>maze_tiles.tres</code>. Add a second TileMapLayer named <code>Items</code> after <code>Floor</code>, and drag <code>maze_tiles.tres</code> onto its <b>Tile Set</b> slot.
+    <aside class="why"><p>Two layers keep two kinds of information apart: <code>Floor</code> is the maze (wall or path), <code>Items</code> is what's lying on it. Picking up a seed just erases a cell on <code>Items</code>, and we never need to remember what path tile was underneath.</p></aside></li>
+  <li>Add two more Node2Ds inside <code>Maze</code>: <code>Player</code> with a ColorRect child at <code>(-7, -7)</code> sized <code>(14, 14)</code> in bright green, and <code>Beetle</code> with a ColorRect at <code>(-8, -8)</code> sized <code>(16, 16)</code> in dark red.</li>
+  <li>Add <code>BeetleTimer</code> (Timer, <b>Wait Time</b> <code>0.4</code>, <b>Autostart</b> on), <code>Clock</code> (Timer, <b>Wait Time</b> <code>90</code>, <b>One Shot</b> and <b>Autostart</b> on), and <code>InfoLabel</code> (Label at <code>(12, 336)</code>).</li>
+</ol>
+<h3>Growing the maze</h3>
+<ol class="steps">
+  <li>Attach to <code>RootMaze</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/root_maze/root_maze.gd">
+extends MiniGame
+## A maze generated from today's date. Collect the seeds in the dead ends
+## before the beetle catches you.
+
+const COLUMNS := 31
+const ROWS := 17
+const SOURCE := 0
+const WALL := Vector2i(0, 0)
+const PATH := Vector2i(1, 0)
+const SEED := Vector2i(2, 0)
+const START := Vector2i(1, 1)
+const STEP_TIME := 0.12
+const POINTS_PER_SEED := 5
+
+## Off = a different maze every game.
+@export var daily := true
+
+@onready var floor_layer: TileMapLayer = $Maze/Floor
+@onready var items: TileMapLayer = $Maze/Items
+@onready var player: Node2D = $Maze/Player
+@onready var beetle: Node2D = $Maze/Beetle
+@onready var beetle_timer: Timer = $BeetleTimer
+@onready var clock: Timer = $Clock
+@onready var info_label: Label = $InfoLabel
+
+var _rng := RandomNumberGenerator.new()
+var _astar := AStarGrid2D.new()
+var _player_cell := START
+var _beetle_cell := Vector2i(COLUMNS - 2, ROWS - 2)
+var _moving := false
+var _seeds_left := 0
+
+
+func _ready() -> void:
+	if daily:
+		# The same text gives the same seed, so everyone gets today's maze.
+		_rng.seed = hash(Time.get_date_string_from_system())
+	else:
+		_rng.randomize()
+	_carve_maze()
+	_place_seeds()
+	_build_pathfinding()
+	player.position = floor_layer.map_to_local(_player_cell)
+	beetle.position = floor_layer.map_to_local(_beetle_cell)
+	beetle_timer.timeout.connect(_move_beetle)
+	clock.timeout.connect(end_game)
+
+
+# --- Generation ---------------------------------------------------------------
+
+## "Recursive backtracker": start with solid wall, wander randomly two cells at
+## a time carving a path, and back up whenever there's nowhere new to go.
+func _carve_maze() -> void:
+	for y in ROWS:
+		for x in COLUMNS:
+			floor_layer.set_cell(Vector2i(x, y), SOURCE, WALL)
+	floor_layer.set_cell(START, SOURCE, PATH)
+	var stack: Array[Vector2i] = [START]
+	var jumps: Array[Vector2i] = [Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2)]
+	while not stack.is_empty():
+		var cell: Vector2i = stack.back()
+		var options: Array[Vector2i] = []
+		for jump in jumps:
+			var target := cell + jump
+			if _inside(target) and _is_wall(target):
+				options.append(target)
+		if options.is_empty():
+			stack.pop_back()
+			continue
+		var chosen := options[_rng.randi_range(0, options.size() - 1)]
+		floor_layer.set_cell((cell + chosen) / 2, SOURCE, PATH)  # the wall between
+		floor_layer.set_cell(chosen, SOURCE, PATH)
+		stack.append(chosen)
+
+
+## Dead ends (path cells with only one open neighbour) get a seed.
+func _place_seeds() -> void:
+	for cell in floor_layer.get_used_cells():
+		if cell == START or _is_wall(cell):
+			continue
+		var open := 0
+		for step: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+			if not _is_wall(cell + step):
+				open += 1
+		if open == 1:
+			items.set_cell(cell, SOURCE, SEED)
+			_seeds_left += 1
+
+
+func _build_pathfinding() -> void:
+	_astar.region = Rect2i(0, 0, COLUMNS, ROWS)
+	_astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+	_astar.update()
+	for cell in floor_layer.get_used_cells():
+		if _is_wall(cell):
+			_astar.set_point_solid(cell)
+
+
+func _inside(cell: Vector2i) -> bool:
+	return cell.x > 0 and cell.y > 0 and cell.x < COLUMNS - 1 and cell.y < ROWS - 1
+
+
+func _is_wall(cell: Vector2i) -> bool:
+	return floor_layer.get_cell_atlas_coords(cell) == WALL
+
+
+# --- Play ---------------------------------------------------------------------
+
+func _process(_delta: float) -> void:
+	info_label.text = "Seeds left %d    %ds" % [_seeds_left, ceili(clock.time_left)]
+	if _moving:
+		return
+	var step := Vector2i.ZERO
+	if Input.is_action_pressed("mg_left"):
+		step = Vector2i.LEFT
+	elif Input.is_action_pressed("mg_right"):
+		step = Vector2i.RIGHT
+	elif Input.is_action_pressed("mg_up"):
+		step = Vector2i.UP
+	elif Input.is_action_pressed("mg_down"):
+		step = Vector2i.DOWN
+	if step == Vector2i.ZERO or _is_wall(_player_cell + step):
+		return
+	_player_cell += step
+	_moving = true
+	var tween := create_tween()
+	tween.tween_property(player, "position", floor_layer.map_to_local(_player_cell), STEP_TIME)
+	tween.finished.connect(_on_step_finished)
+
+
+func _on_step_finished() -> void:
+	_moving = false
+	if items.get_cell_source_id(_player_cell) != -1:
+		items.erase_cell(_player_cell)
+		score += POINTS_PER_SEED
+		_seeds_left -= 1
+		if _seeds_left == 0:
+			score += ceili(clock.time_left)  # bonus for finishing early
+			end_game()
+	_check_caught()
+
+
+func _move_beetle() -> void:
+	var path := _astar.get_id_path(_beetle_cell, _player_cell)
+	if path.size() > 1:
+		_beetle_cell = path[1]
+		var tween := create_tween()
+		tween.tween_property(beetle, "position", floor_layer.map_to_local(_beetle_cell), beetle_timer.wait_time * 0.9)
+	# The beetle gets a little faster with every step.
+	beetle_timer.wait_time = maxf(0.16, beetle_timer.wait_time - 0.002)
+	_check_caught()
+
+
+func _check_caught() -> void:
+	if _beetle_cell == _player_cell:
+		end_game()
+</script>
+    <div class="qs"><q-a c="TileMapLayer" h="class-tilemaplayer-method-set-cell">What do set_cell's arguments mean?</q-a> <q-a c="TileMapLayer" h="class-tilemaplayer-method-map-to-local">What does map_to_local do?</q-a> <q-a c="AStarGrid2D" h="class-astargrid2d-method-get-id-path">What does get_id_path return?</q-a> <q-a c="Tween">What is a Tween?</q-a></div>
+    <aside class="why"><p><b>Why our own RandomNumberGenerator?</b> A seeded generator always produces the same sequence. If the maze code used the global <code>randi()</code> or <code>pick_random()</code>, anything else in the game that used randomness (the golden sprout, particles) would change the sequence, and the "daily" maze would differ between players. With a private generator, the date alone decides the maze.</p>
+    <p><b>Why AStarGrid2D?</b> It's a pathfinder made for grids: tell it the size and which cells are solid, and <code>get_id_path</code> gives the shortest route. The full navigation system from Part 9 is for free movement over arbitrary shapes, which a tile maze doesn't need.</p>
+    <p><b>Why move cell by cell with a Tween?</b> Grid games feel best when movement snaps between cells but still slides smoothly. Logic happens on whole cells (<code>_player_cell</code>); the Tween only animates the picture.</p></aside></li>
+  <li>Register it: id <code>root_maze</code>, title <code>Root Maze</code>, description <code>A new maze every day. Grab the seeds, dodge the beetle.</code>, Unlock At <code>10000</code>, Seconds Per Point <code>1.5</code>.</li>
+</ol>
+<aside class="tip"><p>The daily seed uses the player's local date, so the maze changes at their midnight. <code>hash()</code> is consistent across devices for the same Godot version, but it can change between Godot versions, so after an engine upgrade the maze for a given day may differ. That's fine for a game; for anything that must never change, write your own simple hash function. <q-a c="Time">What else can the Time singleton tell me?</q-a></p></aside>
+</article>
+
+<article class="ch" id="mg-pinball" data-part="10" data-title="Pollen Pinball: rigid bodies and joints">
+<h2>Pollen Pinball: rigid bodies and joints</h2>
+<div class="meta"><span class="chip">75 minutes</span></div>
+<div class="qs"><q-a d="tutorials/physics/rigid_body">What is a RigidBody2D?</q-a> <q-a c="PhysicsMaterial">What is a PhysicsMaterial?</q-a> <q-a c="AnimatableBody2D">What is an AnimatableBody2D?</q-a> <q-a c="PinJoint2D">What does a PinJoint2D do?</q-a></div>
+<p>A small pinball table: launch the pollen ball, keep it in play with two flippers, and score by hitting bumpers. A swinging pendulum makes every game different. Three balls per game.</p>
+<p>In the Seed Catcher, <em>your code</em> moved the player. Here, <em>physics</em> moves the ball: you only give it a push, and Godot's physics engine works out gravity, bounces and collisions.</p>
+<pre class="tree"><b>PollenPinball</b> <i>(Node)</i>                        pinball.gd
+├─ <b>Background</b> <i>(ColorRect)</i>
+├─ <b>TableLook</b> <i>(ColorRect)</i>
+├─ <b>Table</b> <i>(StaticBody2D)</i>  <i>seven CollisionShape2Ds with SegmentShape2Ds</i>
+├─ <b>LeftFlipper</b>, <b>RightFlipper</b> <i>(AnimatableBody2D)</i>  flipper.gd
+├─ <b>Bumpers</b> <i>(Node2D)</i>  <i>three bumper.tscn instances</i>
+├─ <b>Anchor</b> <i>(StaticBody2D)</i>
+├─ <b>Bob</b> <i>(RigidBody2D)</i>
+├─ <b>Joint</b> <i>(PinJoint2D)</i>
+├─ <b>Ball</b> <i>(RigidBody2D)</i>
+├─ <b>Drain</b> <i>(Area2D)</i>
+└─ <b>HUD</b> <i>(Label)</i></pre>
+<h3>The table</h3>
+<ol class="steps">
+  <li>New scene, root <b>Node</b> named <code>PollenPinball</code>, saved as <code>minigames/pollen_pinball/pollen_pinball.tscn</code>. Add a dark <code>Background</code> ColorRect at <code>(0, 0)</code>, size <code>(640, 360)</code>, and a lighter <code>TableLook</code> ColorRect at <code>(170, 10)</code>, size <code>(300, 350)</code>.</li>
+  <li>Add <code>Table</code> (StaticBody2D) at <code>(0, 0)</code>, <b>Layer</b> only <b>world</b>, empty <b>Mask</b>. Give it seven CollisionShape2D children, each with a <b>New SegmentShape2D</b>. A segment is a line from point <b>A</b> to point <b>B</b>; type them into the Inspector:
+    <table>
+      <tr><th>Name</th><th>A</th><th>B</th></tr>
+      <tr><td>LeftWall</td><td>(170, 360)</td><td>(170, 10)</td></tr>
+      <tr><td>RightWall</td><td>(470, 360)</td><td>(470, 10)</td></tr>
+      <tr><td>Top</td><td>(170, 10)</td><td>(470, 10)</td></tr>
+      <tr><td>Corner</td><td>(420, 10)</td><td>(470, 60)</td></tr>
+      <tr><td>LaneWall</td><td>(450, 360)</td><td>(450, 110)</td></tr>
+      <tr><td>LeftSlope</td><td>(170, 250)</td><td>(255, 300)</td></tr>
+      <tr><td>RightSlope</td><td>(450, 250)</td><td>(385, 300)</td></tr>
+    </table>
+    <div class="qs"><q-a d="tutorials/physics/collision_shapes_2d">Which collision shape should I use?</q-a></div>
+    <aside class="why"><p>One StaticBody2D with many shapes is cheaper and tidier than one body per wall. Segments are perfect for walls: they have no thickness to line up. The narrow lane on the right, between <code>LaneWall</code> and <code>RightWall</code>, is where the ball is launched; <code>Corner</code> deflects it into the table.</p></aside></li>
+</ol>
+<h3>Flippers</h3>
+<ol class="steps">
+  <li>Add <code>LeftFlipper</code> (<b>AnimatableBody2D</b>) at <code>(258, 302)</code>, <b>Layer</b> <b>world</b>, empty <b>Mask</b>, and make sure <b>Sync to Physics</b> is on. Children: a CollisionShape2D with a <b>CapsuleShape2D</b> (radius <code>6</code>, height <code>56</code>) at position <code>(24, 0)</code> with rotation <code>90</code>, and a ColorRect at <code>(-4, -6)</code> sized <code>(56, 12)</code>.
+    <aside class="why"><p>The body's origin is the hinge, so the shape is offset to stick out to one side. Rotating the body then swings the flipper around its hinge, like a real one.</p></aside></li>
+  <li>Attach to <code>LeftFlipper</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/pollen_pinball/flipper.gd">
+extends AnimatableBody2D
+## Swings up while its action is held, falls back when released.
+
+## The input action that raises this flipper.
+@export var action: StringName = &"mg_left"
+## 1 for a flipper that points right, -1 for one that points left.
+@export var side := 1.0
+
+const REST_ANGLE := 0.5  # radians, about 29°
+const SWING_SPEED := 24.0  # radians per second
+
+
+func _physics_process(delta: float) -> void:
+	var target := -REST_ANGLE * side if Input.is_action_pressed(action) else REST_ANGLE * side
+	rotation = move_toward(rotation, target, SWING_SPEED * delta)
+</script>
+    <aside class="why"><p><b>Why AnimatableBody2D, not RigidBody2D?</b> A flipper must move exactly when you press the button, never get knocked back by the ball. An AnimatableBody2D is moved by code (or animation), but still <em>pushes</em> rigid bodies it hits, with the speed it moved at. That's what launches the ball. With <b>Sync to Physics</b> on, its movement happens in step with the physics engine, so fast swings don't pass through the ball.</p></aside></li>
+  <li>Duplicate <code>LeftFlipper</code> and rename it <code>RightFlipper</code>. Move it to <code>(382, 302)</code>, set the shape's position to <code>(-24, 0)</code> and the ColorRect's to <code>(-52, -6)</code>. In the Inspector set <b>Action</b> to <code>mg_right</code> and <b>Side</b> to <code>-1</code>. (Make the capsule unique first if you change its size.)</li>
+</ol>
+<h3>Bumpers and the pendulum</h3>
+<ol class="steps">
+  <li>New scene, root <b>StaticBody2D</b> named <code>Bumper</code> (<b>Layer</b> <b>world</b>, empty <b>Mask</b>), saved as <code>bumper.tscn</code>. Children:
+    <ul>
+      <li>a CollisionShape2D with a CircleShape2D of radius <code>16</code>;</li>
+      <li>a <b>Sprite2D</b> named <code>Look</code>. Set its <b>Texture</b> to <b>New GradientTexture2D</b>, then click the texture and set <b>Width</b> and <b>Height</b> to <code>32</code>, <b>Fill</b> to <b>Radial</b>, <b>Fill From</b> to <code>(0.5, 0.5)</code> and <b>Fill To</b> to <code>(1, 0.5)</code>. Give it a <b>New Gradient</b>: click the left stop and pick yellow, click the right stop and pick orange, then click on the bar near the right end to add a third stop and set it fully transparent, so the edge is soft;</li>
+      <li>an <b>Area2D</b> named <code>Trigger</code> (empty <b>Layer</b>, <b>Mask</b> only <b>player</b>) with its own CollisionShape2D, a CircleShape2D of radius <code>19</code>.</li>
+    </ul>
+    <div class="qs"><q-a c="GradientTexture2D">What is a GradientTexture2D?</q-a></div>
+    <aside class="why"><p>A GradientTexture2D is an image Godot generates for you, perfect for glowing circles, soft shadows and light blobs, with no art file at all.</p></aside></li>
+  <li>Attach to <code>Bumper</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/pollen_pinball/bumper.gd">
+class_name Bumper
+extends StaticBody2D
+## Kicks the ball away and lights up when touched.
+
+signal bumped
+
+const KICK := 320.0
+
+@onready var look: Sprite2D = $Look
+
+
+func _ready() -> void:
+	$Trigger.body_entered.connect(_on_trigger_body_entered)
+
+
+func _on_trigger_body_entered(body: Node2D) -> void:
+	var ball := body as RigidBody2D
+	if ball == null:
+		return
+	var away := (ball.global_position - global_position).normalized()
+	# Physics callbacks run in the middle of the physics step; push next frame.
+	ball.apply_central_impulse.call_deferred(away * KICK)
+	bumped.emit()
+	create_tween().tween_property(look, "scale", Vector2.ONE, 0.2).from(Vector2(1.4, 1.4))
+</script>
+    <div class="qs"><q-a c="RigidBody2D" h="class-rigidbody2d-method-apply-central-impulse">What's the difference between an impulse and a force?</q-a> <q-a c="Object" h="class-object-method-call-deferred">What does call_deferred do?</q-a></div>
+    <aside class="why"><p>The solid circle makes the ball bounce; the slightly bigger Area2D notices the touch and adds a kick on top. Real pinball bumpers do the same thing with a solenoid.</p></aside></li>
+  <li>In the table scene, add <code>Bumpers</code> (Node2D) and drag in three <code>bumper.tscn</code> instances at <code>(260, 110)</code>, <code>(370, 110)</code> and <code>(315, 175)</code>.</li>
+  <li>The pendulum: add <code>Anchor</code> (StaticBody2D, no shape needed) at <code>(225, 30)</code>, and <code>Bob</code> (RigidBody2D) at <code>(225, 95)</code> with a CircleShape2D of radius <code>10</code> and a ColorRect at <code>(-10, -10)</code> sized <code>(20, 20)</code>. On <code>Bob</code>: <b>Layer</b> <b>world</b>, <b>Mask</b> <b>world</b> and <b>player</b>, <b>Mass</b> <code>3</code>, <b>Gravity Scale</b> <code>0.5</code>.</li>
+  <li>Add a <b>PinJoint2D</b> named <code>Joint</code> at <code>(225, 30)</code>. Set <b>Node A</b> to <code>Anchor</code> and <b>Node B</b> to <code>Bob</code>.
+    <div class="qs"><q-a c="Joint2D">What kinds of 2D joints are there?</q-a></div>
+    <aside class="why"><p>A joint connects two bodies. A PinJoint2D pins them together at its own position, like a nail, so <code>Bob</code> can only swing around <code>Anchor</code>. Joints are how you build chains, ropes, ragdolls, doors and vehicles out of simple bodies.</p></aside></li>
+</ol>
+<h3>The ball and the rules</h3>
+<ol class="steps">
+  <li>Add <code>Ball</code> (RigidBody2D) at <code>(460, 330)</code>: <b>Layer</b> only <b>player</b>, <b>Mask</b> only <b>world</b>. Set <b>Gravity Scale</b> <code>0.5</code>, turn off <b>Can Sleep</b>, set <b>Continuous CD</b> to <b>Cast Shape</b>, and tick <b>Freeze</b>. Under <b>Physics Material Override</b> choose <b>New PhysicsMaterial</b> with <b>Bounce</b> <code>0.4</code> and <b>Friction</b> <code>0.1</code>. Children: a CollisionShape2D with a CircleShape2D of radius <code>7</code>, and a Sprite2D with a 14 × 14 radial GradientTexture2D like the bumper's, in white.
+    <aside class="why"><p><b>Continuous collision detection</b> matters for small fast things. Without it, physics checks the ball's position once per step, and a ball fast enough can be on one side of a thin wall in one step and the other side in the next. Cast Shape sweeps the ball's shape along its path, so it never tunnels. <b>Freeze</b> holds the ball still in the launch lane until you launch it. <q-a d="tutorials/physics/troubleshooting_physics_issues">Why do objects pass through walls?</q-a></p></aside></li>
+  <li>Add <code>Drain</code> (Area2D, empty <b>Layer</b>, <b>Mask</b> only <b>player</b>) at <code>(320, 372)</code>, with a RectangleShape2D of size <code>(320, 10)</code>, just below the bottom of the table. Add a <code>HUD</code> Label at <code>(10, 10)</code> with <b>Size</b> <code>(150, 340)</code> and <b>Autowrap Mode</b> set to <b>Word</b>, so it fits in the space left of the table.</li>
+  <li>Attach to <code>PollenPinball</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/pollen_pinball/pinball.gd">
+extends MiniGame
+## Three balls. Hold the action button to charge the launcher, release to fire.
+
+const BALLS := 3
+const LAUNCH_POSITION := Vector2(460, 330)
+const MIN_LAUNCH := 420.0
+const MAX_LAUNCH := 820.0
+
+@onready var ball: RigidBody2D = $Ball
+@onready var drain: Area2D = $Drain
+@onready var hud: Label = $HUD
+
+var _balls_left := BALLS
+var _charge := 0.0
+var _waiting_to_launch := true
+
+
+func _ready() -> void:
+	for bumper: Bumper in $Bumpers.get_children():
+		bumper.bumped.connect(func() -> void: score += 1)
+	drain.body_entered.connect(_on_drain_body_entered)
+
+
+func _process(delta: float) -> void:
+	var status := "Ball %d of %d" % [BALLS - _balls_left + 1, BALLS]
+	if _waiting_to_launch:
+		status += "\n\nHold the action button, then let go to launch."
+		if Input.is_action_pressed("mg_action"):
+			_charge = minf(_charge + delta, 1.0)
+			status += "\n" + "▮".repeat(ceili(_charge * 10.0))
+		elif _charge > 0.0:
+			_launch()
+	hud.text = status
+
+
+func _launch() -> void:
+	ball.freeze = false
+	ball.apply_central_impulse(Vector2.UP * lerpf(MIN_LAUNCH, MAX_LAUNCH, _charge))
+	_charge = 0.0
+	_waiting_to_launch = false
+
+
+func _on_drain_body_entered(body: Node2D) -> void:
+	if body != ball:
+		return
+	_balls_left -= 1
+	if _balls_left <= 0:
+		end_game()
+	else:
+		_reset_ball.call_deferred()
+
+
+func _reset_ball() -> void:
+	ball.freeze = true
+	ball.linear_velocity = Vector2.ZERO
+	ball.angular_velocity = 0.0
+	ball.global_position = LAUNCH_POSITION
+	_waiting_to_launch = true
+</script>
+    <aside class="why"><p>Don't move a rigid body by setting its position while the physics engine is simulating it: the engine owns its position and will fight you. Freezing it first hands control back to us, so we can teleport it into the launch lane safely, and unfreezing hands it back to physics.</p></aside></li>
+  <li>Register it: id <code>pollen_pinball</code>, title <code>Pollen Pinball</code>, description <code>Flip, bump and keep the pollen in play.</code>, Unlock At <code>100000</code>, Seconds Per Point <code>4</code>.</li>
+  <li>Play. If the ball feels too floaty or too heavy, change the ball's <b>Gravity Scale</b>; if the launcher can't reach the top, raise <code>MAX_LAUNCH</code>.</li>
+</ol>
+<aside class="tip"><p>Other joints to try: a <b>DampedSpringJoint2D</b> plunger that you pull back with the mouse, or a chain of small bodies linked by PinJoint2Ds as a rope. In 3D, Godot also includes the <b>Jolt</b> physics engine, which you can switch to in Project Settings. <q-a d="tutorials/physics/using_jolt_physics">What is Jolt physics?</q-a></p></aside>
+</article>
+
+<article class="ch" id="mg-rhythm" data-part="10" data-title="Beat Bloom: music timing">
+<h2>Beat Bloom: music timing</h2>
+<div class="meta"><span class="chip">60 minutes</span><span class="chip">Needs a music track</span></div>
+<div class="qs"><q-a d="tutorials/audio/sync_with_audio">How do I sync gameplay with music?</q-a> <q-a d="tutorials/audio/audio_buses">What are audio buses?</q-a> <q-a d="tutorials/audio/audio_effects">What audio effects are there?</q-a></div>
+<p>Flower buds float toward a line in time with the music. Press the action button as each one reaches the line. Perfect timing scores 2, close enough scores 1. Behind it all, bars dance to the music's frequencies.</p>
+<aside class="why"><p><b>Why is timing hard?</b> When you call <code>play()</code>, the sound doesn't come out of the speakers right away. It is mixed in chunks, then passes through the operating system and your audio hardware, which together add anywhere from 10 to over 100 milliseconds of delay. A rhythm game that ignores this feels "off" on some devices and fine on others. Godot can measure most of the delay, and a calibration offset handles the rest.</p></aside>
+<h3>Music and the bus</h3>
+<ol class="steps">
+  <li>Pick a music track with a steady beat: one you made in Part 8 is ideal, because you know its tempo. In BeepBox and most music tools, the tempo (BPM) is shown at the top. Copy the file to <code>minigames/beat_bloom/</code>. Select it in the FileSystem dock, and in the <b>Import</b> dock turn <b>Loop</b> off, then click <b>Reimport</b>.
+    <aside class="why"><p>The game ends when the song does, and a looping song never finishes.</p></aside></li>
+  <li>Open the <b>Audio</b> tab at the bottom of the editor. Click <b>Add Bus</b>, rename the new bus <code>Rhythm</code>, and at the bottom of the bus set its output to <code>Music</code>. Click <b>Add Effect</b> on the <code>Rhythm</code> bus and choose <b>SpectrumAnalyzer</b>.
+    <aside class="why"><p>Routing the song through its own bus into <code>Music</code> means the player's music volume setting still applies, while the analyzer only hears this song, not the sound effects.</p></aside></li>
+  <li>In <code>scripts/settings.gd</code>, add a setting for the calibration offset next to the others, plus a line in <code>_ready()</code> and one in <code>save()</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://scripts/settings.gd">
+var rhythm_offset_ms := 0
+
+# in _ready(), inside the "if cfg.load(PATH) == OK:" block:
+		rhythm_offset_ms = cfg.get_value("game", "rhythm_offset_ms", rhythm_offset_ms)
+
+# in save():
+	cfg.set_value("game", "rhythm_offset_ms", rhythm_offset_ms)
+</script></li>
+</ol>
+<h3>The game</h3>
+<ol class="steps">
+  <li>New scene, root <b>Node</b> named <code>BeatBloom</code>, saved as <code>minigames/beat_bloom/beat_bloom.tscn</code>. Add:
+    <ul>
+      <li><code>Background</code> (ColorRect at <code>(0, 0)</code>, size <code>(640, 360)</code>, deep purple);</li>
+      <li><code>Spectrum</code> and <code>Lane</code>, two plain <b>Node2D</b>s, in that order;</li>
+      <li><code>Music</code> (AudioStreamPlayer): drag your track onto <b>Stream</b> and set <b>Bus</b> to <code>Rhythm</code>;</li>
+      <li><code>Judgement</code> (Label at <code>(80, 120)</code>, font size <code>28</code>) and <code>HUD</code> (Label at <code>(12, 8)</code>).</li>
+    </ul></li>
+  <li>Attach to <code>BeatBloom</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/beat_bloom/beat_bloom.gd">
+extends MiniGame
+## Press the action button as each bud reaches the line, in time with the music.
+
+## The song's tempo, in beats per minute.
+@export var bpm := 120.0
+## Seconds from the start of the file to the first beat.
+@export var first_beat := 0.0
+## Beats at the start with no notes, to get ready.
+@export var lead_in_beats := 4
+
+const HIT_X := 120.0
+const LANE_Y := 220.0
+const SCROLL_SPEED := 260.0  # pixels per second
+const PERFECT_WINDOW := 0.045  # seconds either side of the beat
+const GOOD_WINDOW := 0.1
+const BANDS := 24
+const MIN_DB := 60.0
+
+@onready var music: AudioStreamPlayer = $Music
+@onready var lane: Node2D = $Lane
+@onready var spectrum: Node2D = $Spectrum
+@onready var judgement: Label = $Judgement
+@onready var hud: Label = $HUD
+
+var _notes: Array[float] = []
+var _next := 0
+var _combo := 0
+var _recent_errors: Array[float] = []
+var _analyzer: AudioEffectSpectrumAnalyzerInstance
+var _rng := RandomNumberGenerator.new()
+
+
+func _ready() -> void:
+	_make_chart()
+	lane.draw.connect(_draw_lane)
+	spectrum.draw.connect(_draw_spectrum)
+	var bus := AudioServer.get_bus_index("Rhythm")
+	if bus != -1:
+		_analyzer = AudioServer.get_bus_effect_instance(bus, 0) as AudioEffectSpectrumAnalyzerInstance
+	music.finished.connect(end_game)
+	music.play()
+
+
+## Places a note on most beats, and sometimes on the half beat in between.
+func _make_chart() -> void:
+	var beat_length := 60.0 / bpm
+	var beats := floori((music.stream.get_length() - first_beat) / beat_length) - 1
+	for beat in range(lead_in_beats, beats):
+		var time := first_beat + beat * beat_length
+		if _rng.randf() < 0.75:
+			_notes.append(time)
+		if _rng.randf() < 0.15:
+			_notes.append(time + beat_length / 2.0)
+
+
+## Where the song is right now, as heard by the player.
+func song_time() -> float:
+	var time := music.get_playback_position() + AudioServer.get_time_since_last_mix()
+	time -= AudioServer.get_output_latency()
+	return time - Settings.rhythm_offset_ms / 1000.0
+
+
+func _process(_delta: float) -> void:
+	var now := song_time()
+	# Notes that slipped past the line without a press are misses.
+	while _next < _notes.size() and now - _notes[_next] > GOOD_WINDOW:
+		_judge("Miss", 0)
+		_next += 1
+	hud.text = "Combo %d    Offset %+d ms  ([ and ] to adjust)" % [_combo, Settings.rhythm_offset_ms]
+	lane.queue_redraw()
+	spectrum.queue_redraw()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("mg_action"):
+		_press()
+	elif event is InputEventKey and event.is_pressed() and not event.is_echo():
+		var key := (event as InputEventKey).keycode
+		if key == KEY_BRACKETLEFT or key == KEY_BRACKETRIGHT:
+			Settings.rhythm_offset_ms += -10 if key == KEY_BRACKETLEFT else 10
+			Settings.save()
+
+
+func _press() -> void:
+	if _next >= _notes.size():
+		return
+	var error := song_time() - _notes[_next]
+	if absf(error) > GOOD_WINDOW:
+		return  # too early: not near any note, so ignore it
+	_recent_errors.append(error)
+	if _recent_errors.size() > 8:
+		_recent_errors.pop_front()
+	if absf(error) <= PERFECT_WINDOW:
+		_judge("Perfect", 2)
+	else:
+		_judge("Late" if error > 0.0 else "Early", 1)
+	_next += 1
+
+
+func _judge(text: String, points: int) -> void:
+	score += points
+	_combo = _combo + 1 if points > 0 else 0
+	var average := 0.0
+	for e in _recent_errors:
+		average += e
+	if not _recent_errors.is_empty():
+		average /= _recent_errors.size()
+	judgement.text = "%s\n(you're %d ms %s on average)" % [
+			text, absi(roundi(average * 1000.0)), "late" if average > 0.0 else "early"]
+	judgement.modulate.a = 1.0
+	create_tween().tween_property(judgement, "modulate:a", 0.0, 0.6).set_delay(0.3)
+
+
+func _draw_lane() -> void:
+	lane.draw_line(Vector2(0, LANE_Y), Vector2(SIZE.x, LANE_Y), Color(1, 1, 1, 0.15), 2.0)
+	lane.draw_line(Vector2(HIT_X, LANE_Y - 40.0), Vector2(HIT_X, LANE_Y + 40.0), Color.WHITE, 4.0)
+	var now := song_time()
+	for i in range(_next, _notes.size()):
+		var x := HIT_X + (_notes[i] - now) * SCROLL_SPEED
+		if x > SIZE.x + 20.0:
+			break
+		lane.draw_circle(Vector2(x, LANE_Y), 14.0, Color(0.95, 0.65, 0.78))
+		lane.draw_circle(Vector2(x, LANE_Y), 6.0, Color(1.0, 0.9, 0.4))
+
+
+func _draw_spectrum() -> void:
+	if _analyzer == null:
+		return
+	var width := SIZE.x / BANDS
+	var low := 40.0
+	for i in BANDS:
+		# Logarithmic bands: each covers a wider range than the last, like hearing.
+		var high := 40.0 * pow(400.0, float(i + 1) / BANDS)
+		var magnitude := _analyzer.get_magnitude_for_frequency_range(low, high).length()
+		var energy := clampf((MIN_DB + linear_to_db(magnitude)) / MIN_DB, 0.0, 1.0)
+		var height := energy * 160.0
+		spectrum.draw_rect(Rect2(i * width + 2.0, SIZE.y - height, width - 4.0, height), Color(0.6, 0.4, 0.9, 0.5))
+		low = high
+</script>
+    <div class="qs"><q-a c="AudioServer" h="class-audioserver-method-get-output-latency">What does get_output_latency measure?</q-a> <q-a c="AudioEffectSpectrumAnalyzerInstance">How does the spectrum analyzer work?</q-a> <q-a c="CanvasItem" h="class-canvasitem-signal-draw">Can I draw on another node with its draw signal?</q-a></div>
+    <aside class="why"><p><b>Never time notes with <code>delta</code>.</b> Adding up frame times drifts away from the music within seconds, especially when frames are dropped. Asking the player where it is (<code>get_playback_position</code>, refined with the time since the last mix and minus the output latency) is always right, however unevenly frames arrive.</p>
+    <p><b>Drawing with the draw signal.</b> Both visuals are drawn by the game script onto two child nodes, through their <code>draw</code> signals. That keeps the note data and the code that draws it in one place, without a separate script per child. The node order sets which draws on top: the spectrum is behind the lane.</p>
+    <p><b>Calibration</b> is a setting, not part of the save, because it belongs to the device (its speakers or headphones), not to the player's progress.</p></aside></li>
+  <li>Select <code>BeatBloom</code> and set <b>Bpm</b> and <b>First Beat</b> in the Inspector for your track. To find <b>First Beat</b>, open the track in Audacity and read the time of the first drum hit.</li>
+  <li>Register it: id <code>beat_bloom</code>, title <code>Beat Bloom</code>, description <code>Tap to the beat.</code>, Unlock At <code>1000000</code>, Seconds Per Point <code>1.5</code>, and tick <b>Pauses Music</b>.</li>
+  <li>Play a round. If the judgement keeps saying you're late (or early) by a similar amount, press <kbd>]</kbd> (or <kbd>[</kbd>) until it hovers around zero. Bluetooth headphones typically need +150 ms or more.</li>
+</ol>
+</article>
+
+<article class="ch" id="mg-sorter" data-part="10" data-title="Seed Sorter: drag and drop">
+<h2>Seed Sorter: drag and drop</h2>
+<div class="meta"><span class="chip">40 minutes</span></div>
+<div class="qs"><q-a c="Control" h="class-control-private-method-get-drag-data">How does drag and drop start?</q-a> <q-a c="Control" h="class-control-private-method-can-drop-data">How does a Control accept a drop?</q-a> <q-a c="Control" h="class-control-method-set-drag-preview">What is a drag preview?</q-a></div>
+<p>Seed packets pile into a tray. Drag each one onto the pot of the same color. Wrong pots cost a point, and if the tray overflows, the game's over. This mini game is made only of Controls, the same nodes as your idle game's interface, and uses their built-in drag-and-drop support.</p>
+<ol class="steps">
+  <li>Create the folder <code>minigames/seed_sorter</code> and a script <code>seed_packet.gd</code> in it:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/seed_sorter/seed_packet.gd">
+class_name SeedPacket
+extends ColorRect
+## A seed packet that can be dragged onto a SeedPot.
+
+const COLORS := [Color(0.91, 0.71, 0.23), Color(0.82, 0.33, 0.25), Color(0.55, 0.42, 0.78)]
+
+var kind := 0
+
+
+func _ready() -> void:
+	color = COLORS[kind]
+	custom_minimum_size = Vector2(56, 76)
+	mouse_default_cursor_shape = Control.CURSOR_DRAG
+
+
+## Godot calls this when a drag starts on this control. Whatever we return is
+## the drag's data; returning null would mean "this can't be dragged".
+func _get_drag_data(_at_position: Vector2) -> Variant:
+	var preview := ColorRect.new()
+	preview.color = color
+	preview.size = size
+	preview.position = -size / 2.0  # centre the preview on the pointer
+	var holder := Control.new()
+	holder.add_child(preview)
+	set_drag_preview(holder)
+	modulate.a = 0.3  # show where it came from
+	return self
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_DRAG_END:
+		modulate.a = 1.0
+</script>
+    <aside class="why"><p>The drag preview follows the pointer with its top-left corner, so we wrap the visible rectangle in an empty Control and shift it half its size. That centres it under the finger or mouse, which matters most on touch screens, where your finger would otherwise hide it.</p></aside></li>
+  <li>And <code>seed_pot.gd</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/seed_sorter/seed_pot.gd">
+class_name SeedPot
+extends ColorRect
+## Accepts dropped SeedPackets and reports them.
+
+signal sorted(packet: SeedPacket, pot: SeedPot)
+
+@export var kind := 0
+
+
+func _ready() -> void:
+	color = (SeedPacket.COLORS[kind] as Color).darkened(0.35)
+
+
+func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+	return data is SeedPacket
+
+
+func _drop_data(_at_position: Vector2, data: Variant) -> void:
+	sorted.emit(data as SeedPacket, self)
+</script>
+    <aside class="why"><p><code>_can_drop_data</code> is asked continuously while something is dragged over the pot, and the pointer shows a "no" cursor when it says false. That's why it must be quick and must not change anything: the real work happens in <code>_drop_data</code>.</p></aside></li>
+  <li>New scene, root <b>Node</b> named <code>SeedSorter</code>, saved as <code>seed_sorter.tscn</code>. Build:
+<pre class="tree"><b>SeedSorter</b> <i>(Node)</i>                       seed_sorter.gd
+├─ <b>Board</b> <i>(Control)</i>                         <i>Full Rect</i>
+│  ├─ <b>Background</b> <i>(ColorRect)</i>               <i>Full Rect</i>
+│  ├─ <b>Tray</b> <i>(HFlowContainer)</i>             %  <i>position (20, 20), size (600, 170)</i>
+│  ├─ <b>HUD</b> <i>(Label)</i>                       %  <i>position (20, 196)</i>
+│  └─ <b>Pots</b> <i>(HBoxContainer)</i>              %  <i>position (20, 225), size (600, 120)</i>
+│     ├─ <b>Pot1</b> <i>(ColorRect)</i>   seed_pot.gd, Kind 0
+│     ├─ <b>Pot2</b> <i>(ColorRect)</i>   seed_pot.gd, Kind 1
+│     └─ <b>Pot3</b> <i>(ColorRect)</i>   seed_pot.gd, Kind 2
+├─ <b>SpawnTimer</b> <i>(Timer)</i>                     <i>1.1 s, Autostart</i>
+└─ <b>Clock</b> <i>(Timer)</i>                          <i>60 s, One Shot, Autostart</i></pre>
+    On each pot, tick <b>Expand</b> horizontally and set <b>Custom Minimum Size</b> y to <code>120</code>. Give each pot a Label child reading <code>1</code>, <code>2</code> and <code>3</code>. On <code>Tray</code> and <code>Pots</code>, set <b>Theme Overrides → Constants → Separation</b> (H and V on the tray) to <code>8</code> and <code>20</code>.
+    <div class="qs"><q-a c="FlowContainer">What is a FlowContainer?</q-a></div></li>
+  <li>Attach to <code>SeedSorter</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/seed_sorter/seed_sorter.gd">
+extends MiniGame
+## Drag packets onto the matching pots before the tray overflows.
+## Keyboard and controller: 1/2/3 or left/down/right send the oldest packet.
+
+const TRAY_LIMIT := 9
+
+@onready var tray: HFlowContainer = %Tray
+@onready var pots: HBoxContainer = %Pots
+@onready var hud: Label = %HUD
+@onready var spawn_timer: Timer = $SpawnTimer
+@onready var clock: Timer = $Clock
+
+var _rng := RandomNumberGenerator.new()
+
+
+func _ready() -> void:
+	for pot: SeedPot in pots.get_children():
+		pot.sorted.connect(_on_sorted)
+	spawn_timer.timeout.connect(_spawn)
+	clock.timeout.connect(end_game)
+	_spawn()
+
+
+func _process(_delta: float) -> void:
+	hud.text = "Tray %d / %d    %ds" % [tray.get_child_count(), TRAY_LIMIT, ceili(clock.time_left)]
+
+
+func _spawn() -> void:
+	if tray.get_child_count() >= TRAY_LIMIT:
+		end_game()
+		return
+	var packet := SeedPacket.new()
+	packet.kind = _rng.randi_range(0, SeedPacket.COLORS.size() - 1)
+	tray.add_child(packet)
+	spawn_timer.wait_time = maxf(0.45, spawn_timer.wait_time * 0.97)
+
+
+func _on_sorted(packet: SeedPacket, pot: SeedPot) -> void:
+	if packet.is_queued_for_deletion():
+		return
+	if packet.kind == pot.kind:
+		score += 1
+		packet.queue_free()
+	else:
+		score -= 1
+		pot.modulate = Color(1.6, 0.6, 0.6)
+		create_tween().tween_property(pot, "modulate", Color.WHITE, 0.3)
+
+
+## A way to play without dragging, for keyboards, controllers and anyone
+## who finds dragging hard.
+func _unhandled_input(event: InputEvent) -> void:
+	var pot_index := -1
+	if event.is_action_pressed("mg_left"):
+		pot_index = 0
+	elif event.is_action_pressed("mg_down"):
+		pot_index = 1
+	elif event.is_action_pressed("mg_right"):
+		pot_index = 2
+	elif event is InputEventKey and event.is_pressed() and not event.is_echo():
+		var key := (event as InputEventKey).keycode
+		if key >= KEY_1 and key <= KEY_3:
+			pot_index = key - KEY_1
+	if pot_index == -1 or tray.get_child_count() == 0:
+		return
+	var oldest := tray.get_child(0) as SeedPacket
+	_on_sorted(oldest, pots.get_child(pot_index) as SeedPot)
+	get_viewport().set_input_as_handled()
+</script>
+    <div class="qs"><q-a d="tutorials/ui/gui_navigation">How else can players without a mouse use my interface?</q-a></div>
+    <aside class="why"><p><b>Why a second way to play?</b> Drag and drop is impossible for many people with motor impairments, awkward on a controller, and hard on a tiny phone screen. Offering the same action through keys or buttons costs a dozen lines. The same principle applies to your whole game: anything you can drag, you should also be able to do by clicking or pressing.</p></aside></li>
+  <li>Register it: id <code>seed_sorter</code>, title <code>Seed Sorter</code>, description <code>Drag the packets into the matching pots.</code>, Unlock At <code>500</code>, Seconds Per Point <code>3</code>.</li>
+</ol>
+</article>
+
+<article class="ch" id="mg-greenhouse" data-part="10" data-title="Greenhouse Run: a 3D mini game">
+<h2>Greenhouse Run: a 3D mini game</h2>
+<div class="meta"><span class="chip">90 minutes</span></div>
+<div class="qs"><q-a d="tutorials/3d/introduction_to_3d">How does 3D work in Godot?</q-a> <q-a d="tutorials/3d/csg_tools">What is CSG?</q-a> <q-a d="tutorials/3d/spring_arm">What is a SpringArm3D?</q-a> <q-a d="tutorials/3d/using_multi_mesh_instance">What is a MultiMesh?</q-a> <q-a d="tutorials/3d/environment_and_post_processing">What does WorldEnvironment control?</q-a></div>
+<p>Sprint down a long greenhouse, dodging flowerpots and grabbing glowing seeds. Steer left and right, jump over pots, and reach the far door in 45 seconds. You'll build the whole level in the editor from <b>CSG</b> shapes, without a 3D modelling program.</p>
+<pre class="tree"><b>GreenhouseRun</b> <i>(Node)</i>                       greenhouse_run.gd
+├─ <b>World</b> <i>(Node3D)</i>
+│  ├─ <b>Environment</b> <i>(WorldEnvironment)</i>
+│  ├─ <b>Sun</b> <i>(DirectionalLight3D)</i>
+│  ├─ <b>Greenhouse</b> <i>(CSGCombiner3D)</i>
+│  │  ├─ <b>Floor</b>, <b>LeftWall</b>, <b>RightWall</b> <i>(CSGBox3D)</i>
+│  │  └─ <b>Windows</b> <i>(CSGBox3D, Subtraction)</i>
+│  ├─ <b>Grass</b> <i>(MultiMeshInstance3D)</i>
+│  ├─ <b>Course</b> <i>(Node3D)</i>
+│  ├─ <b>Finish</b> <i>(Area3D)</i>
+│  └─ <b>Runner</b> <i>(CharacterBody3D)</i>                  runner.gd
+│     ├─ <b>Shape</b> <i>(CollisionShape3D)</i>
+│     ├─ <b>Body</b> <i>(MeshInstance3D)</i>
+│     └─ <b>Arm</b> <i>(SpringArm3D)</i>
+│        └─ <b>Camera</b> <i>(Camera3D)</i>
+├─ <b>HUD</b> <i>(Label)</i>
+└─ <b>Clock</b> <i>(Timer)</i></pre>
+<h3>The greenhouse</h3>
+<ol class="steps">
+  <li>New scene, root <b>Node</b> named <code>GreenhouseRun</code>, saved as <code>minigames/greenhouse_run/greenhouse_run.tscn</code>. Add a <b>Node3D</b> named <code>World</code>. The editor switches to the 3D view.
+    <div class="qs"><q-a d="tutorials/3d/introduction_to_3d#coordinate-system">Which way is forward in Godot 3D?</q-a></div>
+    <aside class="why"><p>In Godot, <b>-Z is forward</b>, +Y is up and +X is right. Our runner runs toward -Z. Every Camera3D looks down its own -Z axis too, which is why forward is negative.</p></aside></li>
+  <li>Add <code>Environment</code> (WorldEnvironment) to <code>World</code>. Set <b>Environment</b> to <b>New Environment</b>, then in it: <b>Background → Mode</b> <b>Sky</b>; <b>Sky</b> → <b>New Sky</b> → <b>Sky Material</b> → <b>New ProceduralSkyMaterial</b>; under <b>Fog</b> tick <b>Enabled</b> and set <b>Density</b> to <code>0.02</code>; under <b>Glow</b> tick <b>Enabled</b>.
+    <aside class="why"><p>Fog hides the end of the long greenhouse, so it feels bigger than it is and the far end doesn't pop into view. Glow makes the emissive seeds look like they're shining.</p></aside></li>
+  <li>Add <code>Sun</code> (DirectionalLight3D) to <code>World</code>, with <b>Rotation</b> <code>(-50, 30, 0)</code> and <b>Shadow → Enabled</b> ticked.
+    <div class="qs"><q-a d="tutorials/3d/lights_and_shadows">How do lights and shadows work in 3D?</q-a></div></li>
+  <li>Add <code>Greenhouse</code> (<b>CSGCombiner3D</b>) to <code>World</code> and tick <b>Use Collision</b>. Inside it add four <b>CSGBox3D</b>s:
+    <table>
+      <tr><th>Name</th><th>Size</th><th>Position</th><th>Notes</th></tr>
+      <tr><td>Floor</td><td>(10, 1, 230)</td><td>(0, -0.5, -105)</td><td>Material: New StandardMaterial3D, a soil brown Albedo</td></tr>
+      <tr><td>LeftWall</td><td>(0.4, 4, 230)</td><td>(-5.2, 2, -105)</td><td>Material: glass (below)</td></tr>
+      <tr><td>RightWall</td><td>(0.4, 4, 230)</td><td>(5.2, 2, -105)</td><td>Same material as LeftWall</td></tr>
+      <tr><td>Windows</td><td>(12, 1.2, 220)</td><td>(0, 2.2, -105)</td><td><b>Operation</b>: Subtraction</td></tr>
+    </table>
+    For the glass, give <code>LeftWall</code> a <b>New StandardMaterial3D</b>, set its <b>Transparency</b> to <b>Alpha</b> and its <b>Albedo</b> color to a pale green with alpha around <code>80</code>. Right-click the material slot → <b>Copy</b>, then paste it into <code>RightWall</code>'s material slot.
+    <aside class="why"><p><b>CSG</b> (Constructive Solid Geometry) builds shapes by adding and subtracting simple solids. The <code>Windows</code> box <em>cuts</em> a long strip out of both walls at once. CSG is perfect for blocking out levels quickly; for a finished game you'd usually model in Blender (Part 8) and import, because CSG costs more to compute.</p></aside></li>
+</ol>
+<h3>The runner</h3>
+<ol class="steps">
+  <li>Add <code>Runner</code> (CharacterBody3D) to <code>World</code> at <code>(0, 0, 0)</code>, <b>Layer</b> only <b>player</b>, <b>Mask</b> only <b>world</b>. Children:
+    <ul>
+      <li><code>Shape</code>: CollisionShape3D with a <b>CapsuleShape3D</b> (radius <code>0.4</code>, height <code>1.6</code>) at position <code>(0, 0.8, 0)</code>;</li>
+      <li><code>Body</code>: MeshInstance3D with a <b>CapsuleMesh</b> of the same size and position, with a bright material;</li>
+      <li><code>Arm</code>: <b>SpringArm3D</b> at <code>(0, 1.4, 0)</code>, rotation <code>(-20, 0, 0)</code>, <b>Spring Length</b> <code>4</code>, <b>Collision Mask</b> only <b>world</b>, with a <b>Camera3D</b> child named <code>Camera</code>.</li>
+    </ul>
+    <aside class="why"><p>A SpringArm3D casts backwards from the player and places the camera at the end, unless something is in the way, in which case it pulls the camera in. That stops walls from coming between the camera and the player. Its mask is <b>world</b> only so it never collides with the player itself.</p></aside></li>
+  <li>Attach to <code>Runner</code>, saved as <code>minigames/greenhouse_run/runner.gd</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/greenhouse_run/runner.gd">
+class_name Runner
+extends CharacterBody3D
+## Runs forward on its own, ever faster. Steer and jump.
+
+const STRAFE_SPEED := 7.0
+const JUMP_VELOCITY := 7.0
+const GRAVITY := 20.0
+const START_SPEED := 9.0
+const TOP_SPEED := 18.0
+
+var forward_speed := START_SPEED
+
+
+func _physics_process(delta: float) -> void:
+	velocity.x = Input.get_axis("mg_left", "mg_right") * STRAFE_SPEED
+	velocity.z = -forward_speed
+	if is_on_floor():
+		if Input.is_action_just_pressed("mg_action") or Input.is_action_just_pressed("mg_up"):
+			velocity.y = JUMP_VELOCITY
+	else:
+		velocity.y -= GRAVITY * delta
+	move_and_slide()
+	forward_speed = minf(forward_speed + delta * 0.25, TOP_SPEED)
+	# Running into a pot stops you; start again from a jog.
+	if is_on_wall() and get_real_velocity().z > -1.0:
+		forward_speed = START_SPEED
+</script>
+    <div class="qs"><q-a c="CharacterBody3D">What is a CharacterBody3D?</q-a> <q-a c="CharacterBody3D" h="class-characterbody3d-method-get-real-velocity">What's the difference between velocity and get_real_velocity?</q-a></div></li>
+</ol>
+<h3>Pots, seeds and grass</h3>
+<ol class="steps">
+  <li>New scene, root <b>StaticBody3D</b> named <code>Pot</code> (<b>Layer</b> <b>world</b>), with a CollisionShape3D using a <b>CylinderShape3D</b> (radius <code>0.5</code>, height <code>1</code>) and a MeshInstance3D with a <b>CylinderMesh</b> (top radius <code>0.5</code>, bottom radius <code>0.35</code>, height <code>1</code>) in terracotta orange, both at position <code>(0, 0.5, 0)</code>. Save as <code>pot.tscn</code>.</li>
+  <li>New scene, root <b>Area3D</b> named <code>Seed</code> (<b>Layer</b> <b>pickups</b>, <b>Mask</b> <b>player</b>), with a CollisionShape3D using a <b>SphereShape3D</b> (radius <code>0.5</code>) and a MeshInstance3D with a <b>SphereMesh</b> (radius <code>0.25</code>, height <code>0.5</code>), both at <code>(0, 0.8, 0)</code>. Give the mesh a StandardMaterial3D with a yellow <b>Albedo</b>, and under <b>Emission</b> tick <b>Enabled</b> with the same yellow and <b>Energy Multiplier</b> <code>3</code>. Save as <code>seed_3d.tscn</code>.</li>
+  <li>Back in the main scene, add <code>Course</code> (Node3D) to <code>World</code>, then <code>Finish</code> (Area3D, empty <b>Layer</b>, <b>Mask</b> <b>player</b>) at <code>(0, 2, -215)</code> with a <b>BoxShape3D</b> of size <code>(10, 4, 1)</code>.</li>
+  <li>Add <code>Grass</code> (<b>MultiMeshInstance3D</b>) to <code>World</code>. Set <b>Multimesh</b> to <b>New MultiMesh</b>, then in it: <b>Transform Format</b> <b>3D</b>, tick <b>Use Colors</b>, and set <b>Mesh</b> to a <b>New BoxMesh</b> of size <code>(0.05, 0.4, 0.05)</code>. Give the BoxMesh a <b>New StandardMaterial3D</b> and, under <b>Vertex Color</b>, tick <b>Use as Albedo</b>. Leave <b>Instance Count</b> at <code>0</code>; the script fills it in.
+    <aside class="why"><p>Drawing 4,000 separate grass nodes would be thousands of draw calls and slow everywhere, especially in a browser. A MultiMesh draws thousands of copies of one mesh in a single draw call, each with its own transform and color. It's how games render grass, crowds, forests and bullet swarms. <b>Use as Albedo</b> lets each blade's instance color tint it.</p></aside></li>
+  <li>Add <code>HUD</code> (Label at <code>(12, 8)</code>) and <code>Clock</code> (Timer, <code>45</code>, <b>One Shot</b>, <b>Autostart</b>) to the root, then attach to <code>GreenhouseRun</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/greenhouse_run/greenhouse_run.gd">
+extends MiniGame
+## Reach the far door in time, collecting seeds on the way.
+
+const POT := preload("res://minigames/greenhouse_run/pot.tscn")
+const SEED_3D := preload("res://minigames/greenhouse_run/seed_3d.tscn")
+const LANES: Array[float] = [-3.0, 0.0, 3.0]
+const GRASS_BLADES := 4000
+
+@onready var course: Node3D = $World/Course
+@onready var grass: MultiMeshInstance3D = $World/Grass
+@onready var finish: Area3D = $World/Finish
+@onready var runner: Runner = $World/Runner
+@onready var hud: Label = $HUD
+@onready var clock: Timer = $Clock
+
+var _rng := RandomNumberGenerator.new()
+
+
+func _ready() -> void:
+	_build_course()
+	_plant_grass()
+	finish.body_entered.connect(_on_finish)
+	clock.timeout.connect(end_game)
+
+
+func _process(delta: float) -> void:
+	hud.text = "Seeds %d    %ds    %d m to go" % [score, ceili(clock.time_left), maxi(0, ceili(215.0 + runner.position.z))]
+	for item in course.get_children():
+		if item is Area3D:
+			(item as Node3D).rotate_y(delta * 2.0)
+
+
+func _build_course() -> void:
+	var z := -15.0
+	while z > -205.0:
+		var lane: float = LANES[_rng.randi_range(0, LANES.size() - 1)]
+		if _rng.randf() < 0.55:
+			var pot: Node3D = POT.instantiate()
+			pot.position = Vector3(lane, 0.0, z)
+			course.add_child(pot)
+		else:
+			var seed_pickup: Area3D = SEED_3D.instantiate()
+			seed_pickup.position = Vector3(lane, 0.0, z)
+			seed_pickup.body_entered.connect(_on_seed_collected.bind(seed_pickup))
+			course.add_child(seed_pickup)
+		z -= _rng.randf_range(4.0, 8.0)
+
+
+func _plant_grass() -> void:
+	var multimesh := grass.multimesh
+	multimesh.instance_count = GRASS_BLADES
+	for i in GRASS_BLADES:
+		var turn := Basis(Vector3.UP, _rng.randf() * TAU)
+		var size := _rng.randf_range(0.6, 1.5)
+		var place := Vector3(_rng.randf_range(-4.8, 4.8), 0.2 * size, _rng.randf_range(-220.0, 8.0))
+		multimesh.set_instance_transform(i, Transform3D(turn.scaled(Vector3.ONE * size), place))
+		multimesh.set_instance_color(i, Color(0.3, _rng.randf_range(0.5, 0.8), 0.25))
+
+
+func _on_seed_collected(_body: Node3D, seed_pickup: Area3D) -> void:
+	if seed_pickup.is_queued_for_deletion():
+		return
+	score += 1
+	seed_pickup.queue_free()
+
+
+func _on_finish(_body: Node3D) -> void:
+	score += ceili(clock.time_left)  # bonus for every second to spare
+	end_game()
+</script>
+    <div class="qs"><q-a d="tutorials/3d/using_transforms">What are 3D transforms and bases?</q-a> <q-a c="MultiMesh" h="class-multimesh-method-set-instance-transform">How do I place MultiMesh instances?</q-a></div></li>
+  <li>Register it: id <code>greenhouse_run</code>, title <code>Greenhouse Run</code>, description <code>Sprint, dodge the pots, grab the seeds.</code>, Unlock At <code>10000000</code>, Seconds Per Point <code>3</code>.</li>
+</ol>
+<aside class="tip" data-if="web mobile"><p>3D in the browser and on older phones is much slower than 2D. If the run stutters, lower <code>GRASS_BLADES</code>, turn off the sun's shadows, or set the <code>GameViewport</code>'s <b>Scaling 3D → Scale</b> below 1 to render the 3D at a lower resolution. <q-a d="tutorials/3d/resolution_scaling">What is resolution scaling?</q-a></p></aside>
+</article>
+
+<article class="ch" id="mg-duel" data-part="10" data-title="Seed Duel: local split screen">
+<h2>Seed Duel: local split screen</h2>
+<div class="meta"><span class="chip">50 minutes</span><span class="chip">Two players</span></div>
+<div class="qs"><q-a d="tutorials/rendering/viewports">How do multiple Viewports work?</q-a> <q-a d="tutorials/inputs/controllers_gamepads_joysticks">How do I tell two controllers apart?</q-a></div>
+<p>Two gardeners, one field, one screen split down the middle. Each player has their own camera following them, and whoever collects more seeds in 60 seconds wins. Play with WASD and the arrow keys on one keyboard, or with two controllers.</p>
+<aside class="why"><p><b>The trick:</b> there is only one world. Two SubViewports both <em>look at</em> the same <code>World2D</code>, each through its own Camera2D. Nothing is duplicated, so physics, seeds and both players exist once, and each half of the screen just shows a different part of it.</p></aside>
+<h3>Per-player controls</h3>
+<ol class="steps">
+  <li>In <b>Project Settings → Input Map</b>, add <code>p1_left</code>, <code>p1_right</code>, <code>p1_up</code>, <code>p1_down</code> bound to <kbd>A</kbd> <kbd>D</kbd> <kbd>W</kbd> <kbd>S</kbd>, and <code>p2_left</code>, <code>p2_right</code>, <code>p2_up</code>, <code>p2_down</code> bound to the arrow keys.</li>
+  <li>Add a joypad axis to each p1 action (left stick left, right, up, down). When the event dialog opens, set the <b>Device</b> dropdown to <b>Device 0</b> before clicking OK. Do the same for each p2 action with <b>Device 1</b>.
+    <aside class="why"><p>By default an action listens to <em>all</em> devices, so both controllers would move both players. Choosing a device number ties the binding to the first or second controller that was connected.</p></aside></li>
+</ol>
+<h3>The field</h3>
+<ol class="steps">
+  <li>New scene, root <b>CharacterBody2D</b> named <code>Gardener</code> (<b>Layer</b> <b>player</b>, <b>Mask</b> <b>world</b> and <b>player</b>), with a CollisionShape2D (CircleShape2D, radius <code>10</code>) and a ColorRect <code>Look</code> at <code>(-10, -10)</code> sized <code>(20, 20)</code>. Save as <code>minigames/seed_duel/gardener.tscn</code> and attach:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/seed_duel/gardener.gd">
+class_name DuelGardener
+extends CharacterBody2D
+## One player in Seed Duel. Reads the p1_ or p2_ actions.
+
+const SPEED := 180.0
+const FIELD := Vector2(1280, 720)
+
+@export_range(1, 2) var player_number := 1
+@export var tint := Color.WHITE
+
+var seeds := 0
+
+
+func _ready() -> void:
+	$Look.color = tint
+
+
+func _physics_process(_delta: float) -> void:
+	var prefix := "p%d_" % player_number
+	velocity = Input.get_vector(prefix + "left", prefix + "right", prefix + "up", prefix + "down") * SPEED
+	move_and_slide()
+	position = position.clamp(Vector2(10, 10), FIELD - Vector2(10, 10))
+</script>
+    <aside class="why"><p>Gardeners collide with each other (their mask includes <b>player</b>), so you can body-block your opponent. A small rule like that turns "collect things" into a game between two people.</p></aside></li>
+  <li>New scene, root <b>Area2D</b> named <code>DuelSeed</code> (<b>Layer</b> <b>pickups</b>, <b>Mask</b> <b>player</b>) with a CircleShape2D of radius <code>8</code> and a gold ColorRect at <code>(-6, -6)</code> sized <code>(12, 12)</code>. Save as <code>duel_seed.tscn</code>.</li>
+  <li>New scene for the game, root <b>Node</b> named <code>SeedDuel</code>, saved as <code>seed_duel.tscn</code>:
+<pre class="tree"><b>SeedDuel</b> <i>(Node)</i>                                  seed_duel.gd
+├─ <b>Split</b> <i>(HBoxContainer)</i>             <i>position (0, 0), size (640, 360), separation 4</i>
+│  ├─ <b>LeftView</b> <i>(SubViewportContainer)</i>   <i>Stretch on, Expand horizontally</i>
+│  │  └─ <b>LeftViewport</b> <i>(SubViewport)</i>
+│  │     ├─ <b>Field</b> <i>(Node2D)</i>
+│  │     │  ├─ <b>Grass</b> <i>(ColorRect)</i>       <i>position (0, 0), size (1280, 720)</i>
+│  │     │  ├─ <b>Seeds</b> <i>(Node2D)</i>
+│  │     │  ├─ <b>Player1</b> <i>(gardener.tscn)</i>  <i>at (200, 360), Player Number 1</i>
+│  │     │  └─ <b>Player2</b> <i>(gardener.tscn)</i>  <i>at (1080, 360), Player Number 2</i>
+│  │     └─ <b>Camera1</b> <i>(Camera2D)</i>
+│  └─ <b>RightView</b> <i>(SubViewportContainer)</i>  <i>Stretch on, Expand horizontally</i>
+│     └─ <b>RightViewport</b> <i>(SubViewport)</i>
+│        └─ <b>Camera2</b> <i>(Camera2D)</i>
+├─ <b>Score1</b>, <b>Score2</b>, <b>Hint</b> <i>(Label)</i>
+├─ <b>SpawnTimer</b> <i>(Timer)</i>                <i>0.4 s, Autostart</i>
+└─ <b>Clock</b> <i>(Timer)</i>                     <i>60 s, One Shot, Autostart</i></pre>
+    Give the two players different <b>Tint</b>s. On both cameras, set <b>Limit</b> Left <code>0</code>, Top <code>0</code>, Right <code>1280</code>, Bottom <code>720</code>, and tick <b>Position Smoothing → Enabled</b>. Place <code>Score1</code> at <code>(12, 8)</code>, <code>Score2</code> at <code>(336, 8)</code> and <code>Hint</code> at <code>(12, 336)</code>.
+    <aside class="why"><p>Camera limits stop the view at the field's edges, so you never see empty space past the grass. These SubViewports are <em>inside</em> the arcade's own SubViewport; viewports nest without any trouble.</p></aside></li>
+  <li>Attach to <code>SeedDuel</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/seed_duel/seed_duel.gd">
+extends MiniGame
+## Two players, one shared world, two cameras. Most seeds in 60 seconds wins.
+
+const DUEL_SEED := preload("res://minigames/seed_duel/duel_seed.tscn")
+const MAX_SEEDS := 30
+
+@onready var left_viewport: SubViewport = $Split/LeftView/LeftViewport
+@onready var right_viewport: SubViewport = $Split/RightView/RightViewport
+@onready var seeds: Node2D = $Split/LeftView/LeftViewport/Field/Seeds
+@onready var player1: DuelGardener = $Split/LeftView/LeftViewport/Field/Player1
+@onready var player2: DuelGardener = $Split/LeftView/LeftViewport/Field/Player2
+@onready var camera1: Camera2D = $Split/LeftView/LeftViewport/Camera1
+@onready var camera2: Camera2D = $Split/RightView/RightViewport/Camera2
+@onready var score1: Label = $Score1
+@onready var score2: Label = $Score2
+@onready var hint: Label = $Hint
+@onready var spawn_timer: Timer = $SpawnTimer
+@onready var clock: Timer = $Clock
+
+var _rng := RandomNumberGenerator.new()
+
+
+func _ready() -> void:
+	# The right half looks into the left half's world instead of its own.
+	right_viewport.world_2d = left_viewport.world_2d
+	spawn_timer.timeout.connect(_spawn_seed)
+	clock.timeout.connect(_on_time_up)
+	Input.joy_connection_changed.connect(_on_joy_connection_changed)
+	_update_hint()
+	for i in 10:
+		_spawn_seed()
+
+
+func _process(_delta: float) -> void:
+	camera1.position = player1.position
+	camera2.position = player2.position
+	score1.text = "Player 1: %d" % player1.seeds
+	score2.text = "Player 2: %d    %ds" % [player2.seeds, ceili(clock.time_left)]
+
+
+func _spawn_seed() -> void:
+	if seeds.get_child_count() >= MAX_SEEDS:
+		return
+	var seed_area: Area2D = DUEL_SEED.instantiate()
+	seed_area.position = Vector2(_rng.randf_range(20.0, 1260.0), _rng.randf_range(20.0, 700.0))
+	seed_area.body_entered.connect(_on_seed_touched.bind(seed_area))
+	seeds.add_child(seed_area)
+
+
+func _on_seed_touched(body: Node2D, seed_area: Area2D) -> void:
+	if seed_area.is_queued_for_deletion() or not body is DuelGardener:
+		return
+	(body as DuelGardener).seeds += 1
+	score += 1  # the reward counts both players' seeds: it's a friendly duel
+	seed_area.queue_free()
+
+
+func _on_time_up() -> void:
+	if player1.seeds == player2.seeds:
+		hint.text = "A draw!"
+	else:
+		hint.text = "Player %d wins!" % (1 if player1.seeds > player2.seeds else 2)
+	end_game()
+
+
+func _on_joy_connection_changed(_device: int, _connected: bool) -> void:
+	_update_hint()
+
+
+func _update_hint() -> void:
+	var pads := Input.get_connected_joypads().size()
+	hint.text = "P1: WASD or controller 1   P2: arrows or controller 2   (%d controller%s connected)" % [
+			pads, "" if pads == 1 else "s"]
+</script>
+    <div class="qs"><q-a c="Viewport" h="class-viewport-property-world-2d">What is a World2D?</q-a> <q-a c="Input" h="class-input-signal-joy-connection-changed">How do I notice a controller being plugged in?</q-a></div>
+    <aside class="why"><p>Both players and the seeds live under the <em>left</em> viewport, because a node has to live somewhere in the tree. After <code>world_2d</code> is shared, that's just bookkeeping: the right camera sees them too. The same idea scales to four players in a 2 × 2 grid of SubViewports.</p></aside></li>
+  <li>Register it: id <code>seed_duel</code>, title <code>Seed Duel</code>, description <code>Two players, one field. Grab more seeds than your friend.</code>, Unlock At <code>5000</code>, Seconds Per Point <code>1.5</code>.</li>
+</ol>
+<aside class="tip"><p>For playing together over the internet instead of side by side, see <a href="#multiplayer">Multiplayer: gifting sprouts</a> in Part 9 and the high-level multiplayer docs. <q-a d="tutorials/networking/high_level_multiplayer">How does online multiplayer work?</q-a></p></aside>
+</article>
+
+<article class="ch" id="mg-polish" data-part="10" data-title="Arcade polish: touch, rumble and your own games">
+<h2>Arcade polish: touch, rumble and your own games</h2>
+<div class="meta"><span class="chip">40 minutes</span></div>
+<div class="qs"><q-a c="TouchScreenButton">What is a TouchScreenButton?</q-a> <q-a d="tutorials/inputs/controller_features">What else can controllers do?</q-a></div>
+<h3>On-screen controls for touch screens</h3>
+<p>Phones have no keyboard. These buttons press the <code>mg_</code> actions, so every mini game works on touch without changing any of them, and they only appear on touch screens.</p>
+<ol class="steps">
+  <li>Open <code>arcade.tscn</code> and add a <b>Node2D</b> named <code>TouchControls</code> as the last child of <code>Arcade</code>. Inside it add five <b>TouchScreenButton</b>s named <code>Left</code>, <code>Right</code>, <code>Down</code>, <code>Up</code> and <code>Action</code>.</li>
+  <li>Select <code>Left</code>. Set <b>Texture Normal</b> to a <b>New GradientTexture2D</b>, 96 × 96, <b>Fill</b> <b>Radial</b>, <b>Fill From</b> <code>(0.5, 0.5)</code>, <b>Fill To</b> <code>(1, 0.5)</code>, with a gradient from white at alpha <code>90</code> to fully transparent. Set <b>Shape</b> to a <b>New CircleShape2D</b> of radius <code>48</code>, <b>Action</b> to <code>mg_left</code>, and <b>Visibility Mode</b> to <b>Touchscreen Only</b>. Add a Label child at <code>(36, 34)</code> reading <code>◀</code>.
+    <aside class="why"><p><b>Touchscreen Only</b> hides the buttons on computers without a touch screen. Because the buttons press <em>actions</em>, a game can't tell whether a jump came from <kbd>Space</kbd>, a controller or a thumb. That's the payoff for using actions everywhere.</p></aside></li>
+  <li>Copy the texture and shape to the other four (right-click the slot → <b>Copy</b>, then <b>Paste</b>), set their actions to <code>mg_right</code>, <code>mg_down</code>, <code>mg_up</code> and <code>mg_action</code>, and their labels to <code>▶</code>, <code>▼</code>, <code>▲</code> and <code>●</code>.</li>
+  <li>Add to <code>arcade.gd</code>, and call <code>_layout_touch_controls()</code> at the end of <code>_ready()</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/arcade.gd">
+func _layout_touch_controls() -> void:
+	var screen := get_viewport().get_visible_rect().size
+	var bottom := screen.y - 112.0
+	$TouchControls/Left.position = Vector2(16, bottom)
+	$TouchControls/Right.position = Vector2(128, bottom)
+	$TouchControls/Down.position = Vector2(screen.x - 224, bottom)
+	$TouchControls/Up.position = Vector2(screen.x - 224, bottom - 112)
+	$TouchControls/Action.position = Vector2(screen.x - 112, bottom)
+	if not get_viewport().size_changed.is_connected(_layout_touch_controls):
+		get_viewport().size_changed.connect(_layout_touch_controls)
+</script>
+    <aside class="why"><p>TouchScreenButtons are Node2Ds, not Controls, so they don't anchor themselves. We place them from the bottom corners and re-place them whenever the window changes size or the phone rotates. Thumbs rest at the bottom corners of a phone held sideways, so that's where the buttons go.</p></aside></li>
+  <li data-if="mobile web">To try them on a computer, turn on <b>Project Settings → Input Devices → Pointing → Emulate Touch From Mouse</b> (switch on <b>Advanced Settings</b> if you can't see it), run the game, and click them. Turn it off again afterwards.</li>
+  <li data-if="portrait">In portrait, the 16:9 game box is short and wide at the top of the screen, which leaves plenty of room below for the buttons. If you'd rather fill the screen, ask players to rotate their phone while playing, or design your mini games at 360 × 640 instead and change the <code>GameViewport</code>'s override and the <code>Aspect</code> ratio to match.</li>
+</ol>
+<h3>Rumble</h3>
+<ol class="steps">
+  <li>Add this function to <code>minigames/mini_game.gd</code>:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/mini_game.gd">
+## Shakes connected controllers, and the phone on mobile, for a moment.
+func rumble(strength: float, seconds: float = 0.2) -> void:
+	if Settings.reduce_motion:
+		return
+	for device in Input.get_connected_joypads():
+		Input.start_joy_vibration(device, strength, strength, seconds)
+	if OS.has_feature("mobile"):
+		Input.vibrate_handheld(int(seconds * 1000.0), strength)
+</script>
+    <div class="qs"><q-a c="Input" h="class-input-method-start-joy-vibration">How does controller vibration work?</q-a> <q-a c="Input" h="class-input-method-vibrate-handheld">How do I vibrate a phone?</q-a></div></li>
+  <li>Use it: in <code>aphid_blaster.gd</code>, add <code>rumble(0.8, 0.3)</code> to <code>_on_player_hurt()</code>; in <code>seed_catcher.gd</code>, change the lambda in <code>_spawn()</code> to also rumble on rotten seeds:
+<script type="text/x-code" data-lang="gd" data-file="res://minigames/seed_catcher/seed_catcher.gd">
+	falling.caught.connect(func(points: int) -> void:
+		score += points
+		if points < 0:
+			rumble(0.5)
+	)
+</script></li>
+  <li data-if="android">For phone vibration on Android, open <b>Project → Export…</b>, select your Android preset, and under <b>Permissions</b> tick <b>Vibrate</b>. Without it, <code>vibrate_handheld</code> silently does nothing.</li>
+</ol>
+<h3>Adding your own mini game</h3>
+<p>You've now seen the whole recipe. For a new game:</p>
+<ol class="steps">
+  <li>Make a folder under <code>minigames/</code> and a scene whose root is a <b>Node</b> with a script that says <code>extends MiniGame</code>.</li>
+  <li>Design it for 640 × 360. Use the <code>mg_</code> actions so it works with keyboards, controllers and the touch buttons. Set <code>score</code> as the player earns points, and call <code>end_game()</code> exactly when it's over.</li>
+  <li>Aim for runs of about a minute, and tune <b>Seconds Per Point</b> so a good run earns a few minutes of production.</li>
+  <li>Create a <b>MiniGameInfo</b> resource for it and add it to <b>Mini Games</b> in <code>database.tres</code>.</li>
+</ol>
+<aside class="tip"><p>Ideas that each explore something new: a fishing game using <b>Line2D</b> and a <b>DampedSpringJoint2D</b>; a "spot the difference" game using <b>shaders</b> and <b>SubViewport</b> textures; a racing game using <b>VehicleBody3D</b>; a typing game using <b>LineEdit</b>; a word game reading a dictionary file with <b>FileAccess</b>; or a puzzle saved and shared as text with <b>JSON</b>. <q-a c="VehicleBody3D">What is a VehicleBody3D?</q-a> <q-a c="Line2D">What is a Line2D?</q-a></p></aside>
 </article>
 
 <!-- ===================================================================== -->
 <!-- APPENDIX -->
 <!-- ===================================================================== -->
-<article class="ch" id="reference-files" data-part="10" data-title="Complete scripts">
+<article class="ch" id="reference-files" data-part="11" data-title="Complete scripts">
 <h2>Complete scripts</h2>
 <div class="meta"><span class="chip">Reference</span></div>
-<p>Every script in Sprout Empire as it stands at the end of Part 7, in full. If something in your project behaves differently, compare against these. Exercises from Parts 8 and 9 aren't included, so the core stays easy to read.</p>
+<p>Every script in Sprout Empire as it stands at the end of Part 7, in full. If something in your project behaves differently, compare against these. Exercises and mini games from Parts 8 to 10 aren't included, so the core stays easy to read.</p>
 <aside class="tip"><p>Autoload order in <b>Project Settings → Globals → Autoload</b>: <code>Settings</code> (scripts/settings.gd), <code>Game</code> (scripts/game.gd), <code>Save</code> (scripts/save.gd), <code>Audio</code> (scenes/audio.tscn).</p></aside>
 
 <h3>Game</h3>
@@ -5479,7 +7356,7 @@ func _show_credits() -> void:
 </script>
 </article>
 
-<article class="ch" id="troubleshooting" data-part="10" data-title="Troubleshooting">
+<article class="ch" id="troubleshooting" data-part="11" data-title="Troubleshooting">
 <h2>Troubleshooting</h2>
 <div class="meta"><span class="chip">Reference</span></div>
 <p>The errors beginners hit most often, what they mean, and the usual fix. Errors appear in the <b>Debugger → Errors</b> tab and the <b>Output</b> panel; double-click one to jump to the line.</p>
@@ -5503,7 +7380,7 @@ func _show_credits() -> void:
 <p>Still stuck? The <a href="https://forum.godotengine.org/" target="_blank" rel="noopener">Godot Forum</a> and the official community channels listed at <a href="https://godotengine.org/community/" target="_blank" rel="noopener">godotengine.org/community</a> are friendly to beginners. Include the exact error, the code around it, and your Godot version.</p>
 </article>
 
-<article class="ch" id="next-steps" data-part="10" data-title="Where to go next">
+<article class="ch" id="next-steps" data-part="11" data-title="Where to go next">
 <h2>Where to go next</h2>
 <div class="meta"><span class="chip">The end (for now)</span></div>
 <p>You've made a complete idle game, published it, and know how to keep improving it. Some ideas for your next steps:</p>
@@ -5511,7 +7388,8 @@ func _show_credits() -> void:
   <li><b>Make it yours.</b> Change the theme entirely: a bakery, a space mine, a wizard's tower. Everything is data; swap the names, numbers and art.</li>
   <li><b>Add a second currency</b> that some generators produce and some upgrades cost, or a <b>research tree</b> unlocked by golden seeds.</li>
   <li><b>Add a story</b>: short messages that appear at milestones turn numbers into a journey.</li>
-  <li><b>Read the official "Your first 2D game" tutorial</b> to learn movement, collisions and enemies, the parts of Godot an idle game doesn't need. <q-a d="getting_started/first_2d_game/index">What is "Your first 2D game"?</q-a></li>
+  <li><b>Make more mini games.</b> Part 10's arcade is built to grow; <a href="#mg-polish">Arcade polish</a> lists ideas that each explore something new.</li>
+  <li><b>Read the official "Your first 2D game" tutorial</b> for a second, fully guided take on movement, collisions and enemies. <q-a d="getting_started/first_2d_game/index">What is "Your first 2D game"?</q-a></li>
   <li><b>Join a game jam.</b> Making a tiny game in a weekend is the fastest way to get better at finishing things.</li>
 </ul>
 <aside class="why"><p>The structure you built (rules in one place, content as data, screens that only display, saves that are versioned) isn't specific to idle games. It's how most well-made games are organised. You'll recognise it in every project from here on.</p></aside>
@@ -5546,7 +7424,7 @@ func _show_credits() -> void:
 
 <script>
 'use strict';
-const APP_BUILD = '1.0 (2026.11.06)';
+const APP_BUILD = '1.1 (2026.11.06)';
 const REPO = 'sonusario/build_your_own_idle_game_in_godot';
 const DOCS = 'https://docs.godotengine.org/en/stable/';
 const $ = id => document.getElementById(id);
@@ -5678,7 +7556,8 @@ const PARTS = {
   7: 'Part 7 · Updating your game',
   8: 'Part 8 · Advanced assets',
   9: 'Part 9 · The rest of Godot',
-  10: 'Appendix',
+  10: 'Part 10 · Mini games',
+  11: 'Appendix',
 };
 const chapters = [...document.querySelectorAll('article.ch')];
 
@@ -5818,7 +7697,10 @@ function updateProgress() {
   if (cur) { const b = cur.querySelector('.chdone input'); if (b) b.checked = chapterDone(cur); }
 }
 
-let openParts = new Set(store.get('openParts', null) || Object.keys(PARTS));
+// Parts start collapsed except the one you're reading; your choices are remembered.
+let openParts = new Set(store.get('openParts', null) || []);
+function setParts(list) { openParts = new Set(list); store.set('openParts', [...openParts]); buildToc(); }
+const CHEV = '<svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function buildToc() {
   const q = $('search').value.trim().toLowerCase();
   const toc = $('toc');
@@ -5832,10 +7714,12 @@ function buildToc() {
     const open = q || openParts.has(part);
     const box = el('div', { class: 'part' + (open ? '' : ' closed') });
     const doneCount = list.filter(chapterDone).length;
-    box.append(el('button', { type: 'button', 'aria-expanded': String(!!open), onclick: () => {
+    const head = el('button', { type: 'button', 'aria-expanded': String(!!open), title: open ? 'Collapse this part' : 'Expand this part', onclick: () => {
       if (openParts.has(part)) openParts.delete(part); else openParts.add(part);
-      store.set('openParts', [...openParts]); buildToc();
-    } }, el('span', {}, PARTS[part]), el('span', { class: 'count' }, `${doneCount}/${list.length}`)));
+      setParts([...openParts]);
+    } }, el('span', {}, PARTS[part]), el('span', { class: 'count' }, `${doneCount}/${list.length}`));
+    head.insertAdjacentHTML('afterbegin', CHEV);
+    box.append(head);
     const ol = el('ol');
     for (const ch of list) {
       const a = el('a', { href: '#' + ch.id, 'data-ch': ch.id, class: (ch.classList.contains('show') ? 'active ' : '') + (chapterDone(ch) ? 'done' : '') },
@@ -5880,6 +7764,7 @@ function go(id, keepScroll) {
   let ch = $(id);
   if (!ch || !ch.matches('article.ch') || ch.hidden) ch = visible()[0];
   chapters.forEach(c => c.classList.toggle('show', c === ch));
+  if (!openParts.has(ch.dataset.part)) { openParts.add(ch.dataset.part); store.set('openParts', [...openParts]); buildToc(); }
   setNav(ch);
   document.querySelectorAll('#toc a[data-ch]').forEach(a => a.classList.toggle('active', a.dataset.ch === ch.id));
   document.title = ch.dataset.title + ' · Build Your Own Idle Game in Godot';
@@ -5957,6 +7842,8 @@ $('showAll').addEventListener('change', e => { showAll = e.target.checked; store
 $('aboutBtn').addEventListener('click', openAbout);
 $('aboutClose').addEventListener('click', () => $('aboutDlg').close());
 $('resetBtn').addEventListener('click', () => $('resetDlg').showModal());
+$('expandAll').addEventListener('click', () => setParts(Object.keys(PARTS)));
+$('collapseAll').addEventListener('click', () => setParts([]));
 $('resetNo').addEventListener('click', () => $('resetDlg').close());
 $('resetYes').addEventListener('click', () => {
   done.clear(); store.set('done', []);
