@@ -531,7 +531,7 @@ chmod +x Godot_v4.*-stable_linux.x86_64
 <ol class="steps">
   <li data-key="desk1">Install <a href="https://desktop.github.com/" target="_blank" rel="noopener">GitHub Desktop</a> and sign in or create a free GitHub account when it asks.</li>
   <li data-key="desk2">Choose <b>File → Add Local Repository…</b>, click <b>Choose…</b> and pick your <code>sprout-empire</code> folder. It will say this isn't a repository yet: click <b>create a repository</b>, leave the settings as they are, and click <b>Create Repository</b>.</li>
-  <li data-key="desk3">On the left you'll see the files Godot made. Type <code>Empty Godot project</code> in the <b>Summary</b> box at the bottom-left and click <b>Commit to main</b>.</li>
+  <li data-key="desk3">GitHub Desktop has already made your first commit, named <b>Initial commit</b>, holding every file Godot made. Click the <b>History</b> tab (top-left) to see it. The <b>Changes</b> tab says there are no local changes, which is right: nothing has changed since that snapshot, so there's nothing to commit yet and <b>Commit to main</b> stays greyed out.</li>
   <li data-key="desk4">Click <b>Publish repository</b> at the top. Keep <b>Keep this code private</b> ticked unless you want it public. Click <b>Publish Repository</b>.</li>
 </ol>
 <p>From now on, whenever a chapter ends, open GitHub Desktop, write a summary of what you did, click <b>Commit to main</b> and then <b>Push origin</b>.</p>
@@ -606,13 +606,14 @@ git push -u origin main
   <li>Press <kbd>Ctrl</kbd>+<kbd>S</kbd> (<kbd>Cmd</kbd>+<kbd>S</kbd>), open the <code>scenes</code> folder, check the name is <code>main.tscn</code> and click <b>Save</b>.</li>
   <li>With <code>Main</code> selected, click the <b>+</b> button at the top of the Scene dock (or press <kbd>Ctrl</kbd>+<kbd>A</kbd>). In the <b>Create New Node</b> window, type <code>ColorRect</code>, select it, click <b>Create</b>. Rename it <code>Background</code>.
     <div class="qs"><q-a d="getting_started/step_by_step/nodes_and_scenes#creating-your-first-scene">How do I add a node?</q-a></div></li>
-  <li>With <code>Background</code> selected, look at the toolbar above the viewport for the <b>anchor preset</b> button (a small square with a green dot; in some versions it's a <b>Layout</b> menu). Choose <b>Full Rect</b>. In the Inspector, click the <b>Color</b> swatch and pick a soft green, such as <code>#cfe6c8</code>.</li>
+  <li>The middle of the editor may still be showing the <code>Button</code> help page from the editor tour, which hides the viewport. Click <b>2D</b> in the workspace buttons at the top of the editor to bring back the 2D viewport, where your scene is drawn.</li>
+  <li>With <code>Background</code> selected, look at the toolbar along the top edge of the 2D viewport for the <b>anchor preset</b> button (a small square with a green dot; in some versions it's a <b>Layout</b> menu). Choose <b>Full Rect</b>. In the Inspector, click the <b>Color</b> swatch and pick a soft green, such as <code>#cfe6c8</code>.</li>
   <li>Select <code>Main</code> again and add a <b>MarginContainer</b>. Rename it <code>Margin</code> and set it to <b>Full Rect</b> too. In the Inspector, open <b>Theme Overrides → Constants</b> and tick and set <b>Margin Left</b>, <b>Top</b>, <b>Right</b> and <b>Bottom</b> to <code>24</code>.
     <div class="qs"><q-a d="tutorials/ui/gui_skinning#customizing-a-control">What are theme overrides?</q-a></div></li>
   <li>Select <code>Margin</code> and add a <b>BoxContainer</b> (just "BoxContainer", not HBox or VBox). Rename it <code>Layout</code>. Under <b>Theme Overrides → Constants</b> set <b>Separation</b> to <code>24</code>. Right-click <code>Layout</code> and choose <b>Access as Unique Name</b>; a <b>%</b> appears next to it.
     <div class="qs"><q-a d="tutorials/scripting/scene_unique_nodes">What is a scene unique name?</q-a></div>
     <aside class="why"><p>A plain BoxContainer can switch between side-by-side and stacked with one property, <code>vertical</code>. We'll flip it from code depending on the window shape, so landscape screens get the farm next to the shop and portrait phones get it on top.</p></aside></li>
-  <li>Select <code>Layout</code> and add a <b>VBoxContainer</b> named <code>Farm</code>. In the Inspector, under <b>Layout → Container Sizing</b>, tick <b>Expand</b> for both <b>Horizontal</b> and <b>Vertical</b>. In <b>Alignment</b> (near the top of the Inspector) choose <b>Center</b>.
+  <li>Select <code>Layout</code> and add a <b>VBoxContainer</b> named <code>Farm</code>. In the Inspector, under <b>Layout → Container Sizing</b>, tick <b>Expand</b> under <b>Horizontal</b>. (There's no Expand under Vertical yet; we'll set that in step 13.) In <b>Alignment</b> (near the top of the Inspector) choose <b>Center</b>.
     <div class="qs"><q-a d="tutorials/ui/gui_containers#sizing-options">What do the size flags Fill, Expand and Shrink do?</q-a></div></li>
   <li>Select <code>Farm</code> and add a <b>Label</b> named <code>SproutCount</code>. Set <b>Text</b> to <code>0 sprouts</code>, <b>Horizontal Alignment</b> to <b>Center</b>, and under <b>Theme Overrides → Font Sizes</b> set <b>Font Size</b> to <code>44</code>. Make it a unique name.</li>
   <li>Add another Label to <code>Farm</code> named <code>PerSecond</code>: text <code>0 per second</code>, centred, font size <code>20</code>. Make it a unique name.</li>
@@ -625,7 +626,9 @@ git push -u origin main
     </ul>
     Make it a unique name.
     <div class="qs"><q-a c="TextureButton">What is a TextureButton?</q-a></div></li>
-  <li>Select <code>Layout</code> and add a <b>TabContainer</b> named <code>Tabs</code>. Under <b>Container Sizing</b> tick <b>Expand</b> for Horizontal and Vertical.</li>
+  <li>Select <code>Layout</code> and add a <b>TabContainer</b> named <code>Tabs</code>. Under <b>Container Sizing</b> tick <b>Expand</b> under Horizontal.</li>
+  <li>Now the vertical half. Select <code>Layout</code> and tick <b>Vertical</b> in the Inspector: <code>Farm</code> and <code>Tabs</code> stack on top of each other. Select <code>Farm</code>: <b>Container Sizing → Vertical</b> now offers <b>Expand</b>, so tick it. Do the same on <code>Tabs</code>. Then select <code>Layout</code> again and untick <b>Vertical</b>.
+    <aside class="why"><p>Godot only shows the Expand option along the direction the parent box stacks its children, because that's the only direction where "share the spare space" means anything. Side by side, Farm and Tabs split the width; stacked, they split the height. The setting you can't see is still saved, so both flags are kept, and when our code flips <code>Layout</code> to vertical on a portrait screen, the vertical Expand takes over. <q-a c="BoxContainer">What is a BoxContainer?</q-a></p></aside></li>
   <li>Select <code>Tabs</code> and add a <b>ScrollContainer</b>. Rename it <code>Shop</code>; the tab takes its title from the node's name. Set <b>Horizontal Scroll Mode</b> (under <b>Scroll</b>) to <b>Disabled</b>.
     <div class="qs"><q-a c="TabContainer">How does a TabContainer pick its tab titles?</q-a> <q-a c="ScrollContainer">What is a ScrollContainer?</q-a></div></li>
   <li>Select <code>Shop</code> and add a <b>VBoxContainer</b> named <code>GeneratorList</code>. Tick <b>Expand</b> for Horizontal in Container Sizing. Make it a unique name.</li>
@@ -7426,7 +7429,7 @@ func _show_credits() -> void:
 
 <script>
 'use strict';
-const APP_BUILD = '1.2 (2026.11.06)';
+const APP_BUILD = '1.3 (2026.11.10)';
 const REPO = 'sonusario/build_your_own_idle_game_in_godot';
 const DOCS = 'https://docs.godotengine.org/en/stable/';
 const $ = id => document.getElementById(id);
