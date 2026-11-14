@@ -629,7 +629,8 @@ git push -u origin main
   <li>Select <code>Layout</code> and add a <b>TabContainer</b> named <code>Tabs</code>. Under <b>Container Sizing</b> tick <b>Expand</b> under Horizontal.</li>
   <li>Now the vertical half. Select <code>Layout</code> and tick <b>Vertical</b> in the Inspector: <code>Farm</code> and <code>Tabs</code> stack on top of each other. Select <code>Farm</code>: <b>Container Sizing → Vertical</b> now offers <b>Expand</b>, so tick it. Do the same on <code>Tabs</code>. Then select <code>Layout</code> again and untick <b>Vertical</b>.
     <aside class="why"><p>Godot only shows the Expand option along the direction the parent box stacks its children, because that's the only direction where "share the spare space" means anything. Side by side, Farm and Tabs split the width; stacked, they split the height. The setting you can't see is still saved, so both flags are kept, and when our code flips <code>Layout</code> to vertical on a portrait screen, the vertical Expand takes over. <q-a c="BoxContainer">What is a BoxContainer?</q-a></p></aside></li>
-  <li>Select <code>Tabs</code> and add a <b>ScrollContainer</b>. Rename it <code>Shop</code>; the tab takes its title from the node's name. Set <b>Horizontal Scroll Mode</b> (under <b>Scroll</b>) to <b>Disabled</b>.
+  <li>Select <code>Tabs</code> and add a <b>ScrollContainer</b>. Rename it <code>Shop</code>; the tab takes its title from the node's name. In the Inspector's <b>ScrollContainer</b> section, set <b>Horizontal Scroll Mode</b> to <b>Disabled</b>. It sits directly in that section, beside the collapsible <b>Scroll</b> group rather than inside it (the Scroll group only holds the scroll positions and custom steps).
+    <aside class="tip"><p>The Inspector cuts long labels short, so this one may read as just "Horizontal Scr…" or even "Horizonta…". The row right after it is <b>Vertical Scroll Mode</b>, so it's the first of that matching pair. To read the full name, hover the label for its tooltip, or widen the Inspector by dragging the divider on its left edge toward the viewport.</p></aside>
     <div class="qs"><q-a c="TabContainer">How does a TabContainer pick its tab titles?</q-a> <q-a c="ScrollContainer">What is a ScrollContainer?</q-a></div></li>
   <li>Select <code>Shop</code> and add a <b>VBoxContainer</b> named <code>GeneratorList</code>. Tick <b>Expand</b> for Horizontal in Container Sizing. Make it a unique name.</li>
   <li>Select <code>Main</code> one last time and add a plain <b>Control</b> named <code>Effects</code>. Set it to <b>Full Rect</b>, and in <b>Mouse → Filter</b> choose <b>Ignore</b>. Make it a unique name.
@@ -7429,7 +7430,7 @@ func _show_credits() -> void:
 
 <script>
 'use strict';
-const APP_BUILD = '1.4 (2026.11.11)';
+const APP_BUILD = '1.5 (2026.11.14)';
 const REPO = 'sonusario/build_your_own_idle_game_in_godot';
 const DOCS = 'https://docs.godotengine.org/en/stable/';
 const $ = id => document.getElementById(id);
